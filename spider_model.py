@@ -110,3 +110,4 @@ if __name__ == "__main__":
     test = np.zeros(24)
     test[1], test[2] = -0.8, -1.2   # bend L1's femur and tibia down
     plot_spider_pose(test)
+#empty
