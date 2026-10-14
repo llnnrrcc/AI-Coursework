@@ -1,6 +1,6 @@
-
 import numpy as np
 import matplotlib.pyplot as plt
+from kinematics import forward_leg_kinematics2
 
 def plot_spider_pose(angles):
     # Define the spider's body dimensions
