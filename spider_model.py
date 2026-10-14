@@ -36,6 +36,18 @@ def spider_joints(angles):
         legs.append(joints)
     return legs
 
+def draw_legs(ax, angles):
+    """Draw all eight legs onto an existing 3D graph `ax`."""
+    for j1, j2, j3, j4 in spider_joints(angles):
+        # Coxa (body to first joint) in black
+        ax.plot([j1[0], j2[0]], [j1[1], j2[1]], [j1[2], j2[2]], color="black", linewidth=2)
+        # Femur (middle segment) in blue
+        ax.plot([j2[0], j3[0]], [j2[1], j3[1]], [j2[2], j3[2]], color="blue", linewidth=2)
+        # Tibia (outer segment) in red
+        ax.plot([j3[0], j4[0]], [j3[1], j4[1]], [j3[2], j4[2]], color="red", linewidth=2)
+        # Foot as a red dot
+        ax.scatter(j4[0], j4[1], j4[2], color="red", s=20)
+
 def plot_spider_pose(angles):
     # Define the spider's body dimensions
     a = 1.5
@@ -79,7 +91,7 @@ def plot_spider_pose(angles):
 
         ax.text(x_base, y_base, 0.1, leg_labels[i])
 
-
+    draw_legs(ax, angles)
     # Label the axes
     ax.set_xlabel("X")
     ax.set_ylabel("Y")
