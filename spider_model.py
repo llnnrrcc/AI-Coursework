@@ -1,6 +1,17 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from kinematics import forward_leg_kinematics2
+
+# --- Spider parameters (from plot_spider_pose.m) ---
+N_LEGS = 8
+SEGMENT_LENGTHS = np.array([1.2, 0.7, 1.0])   # [coxa, femur, tibia]
+BODY_A = 1.5                                    # body oval half-length (front to back)
+BODY_B = 1.0                                    # body oval half-width (side to side)
+
+# Where each leg attaches around the body, in order L1, L2, L3, L4, R4, R3, R2, R1
+BASE_ANGLES = np.deg2rad([45, 75, 105, 135, -135, -105, -75, -45])
+LEG_LABELS = ["L1", "L2", "L3", "L4", "R4", "R3", "R2", "R1"]
 
 def plot_spider_pose(angles):
     # Define the spider's body dimensions
