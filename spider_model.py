@@ -13,6 +13,29 @@ BODY_B = 1.0                                    # body oval half-width (side to 
 BASE_ANGLES = np.deg2rad([45, 75, 105, 135, -135, -105, -75, -45])
 LEG_LABELS = ["L1", "L2", "L3", "L4", "R4", "R3", "R2", "R1"]
 
+def spider_joints(angles):
+    """
+    angles: 24 joint angles in radians, three per leg, in leg order L1 ... R1
+    Returns a list of 8 legs, each a tuple (j1, j2, j3, j4) of [x, y, z] points.
+    No plotting here, so the GA can call this quickly thousands of times.
+    """
+    legs = []
+    for i in range(N_LEGS):
+        # This leg's three angles (Python counts from 0, so leg i starts at i * 3)
+        theta1 = angles[i * 3]
+        theta2 = angles[i * 3 + 1]
+        theta3 = angles[i * 3 + 2]
+
+        # Where the leg joins the body: a point on the oval at this leg's angle
+        angle = BASE_ANGLES[i]
+        base_pos = [BODY_A * np.cos(angle), BODY_B * np.sin(angle), 0]
+
+        # Pair A's function works out the four joint positions for this leg
+        joints = forward_leg_kinematics2(base_pos, angle,
+                                         [theta1, theta2, theta3], SEGMENT_LENGTHS)
+        legs.append(joints)
+    return legs
+
 def plot_spider_pose(angles):
     # Define the spider's body dimensions
     a = 1.5
@@ -70,4 +93,7 @@ def plot_spider_pose(angles):
 
 
 if __name__ == "__main__":
+    legs = spider_joints(np.zeros(24))
+    for label, joints in zip(LEG_LABELS, legs):
+        print(label, np.round(joints[3], 3))
     plot_spider_pose(np.zeros(24))
