@@ -34,6 +34,21 @@ Setup: one left leg at a time, coxa changed, femur and tibia at 0. Viewed from d
 
 ### Result
 
+### Narrowing the edges
+
+Extra values between the main sweep steps, where the verdict flips. Checks whether the paper's limits hold in our model.
+
+| Leg | Coxa angle (rad) | Angle from forward | Contact with neighbour? | Looks realistic? |
+|---|---|---|---|---|
+| L1 | -0.7 | about 5° | no | no - 4 degrees forward of the real minimum (9°), points almost straight ahead |
+| L1 | -0.65 | about 8° | no | no (just) - 1 degree forward of the real minimum |
+| L4 | 0.1 | about 141° | no | no (just) - 2 degrees short of where a real back leg's range starts (143°) |
+| L4 | 0.15 | about 144° | no | yes - just inside the range |
+| L4 | 0.45 | about 161° | no | yes - just inside the back end of the range (162°) |
+| L4 | 0.5 | about 164° | no | no (just) - 2 degrees past the real maximum |
+
+None of these touch a neighbour, so every verdict here comes from the paper's range. Each edge falls between two tested values, right where the paper puts it: L1's forward limit between -0.65 and -0.6 (paper: -0.62), L4's lower limit between 0.1 and 0.15 (paper: 0.14), and L4's upper limit between 0.45 and 0.5 (paper: 0.47).
+
 - **Coxa minimum:** ___ rad, because ___
 - **Coxa maximum:** ___ rad, because ___
 - **Front and back legs need different ranges?** ___
