@@ -80,8 +80,8 @@ for leg in range(8):
     angles[leg * 3 + 2] = -1.5   # tibia
 ```
 
-Does it look like it's standing (side view)? ___
-All eight feet at z = -0.295? ___
+Does it look like it's standing (side view)? Yes. Every leg arches (knee above hip) and all feet sit level at the floor.
+All eight feet at z = -0.295? Yes, confirmed with `spider_model.py`: every foot prints z = -0.295 and counts as planted.
 
 > Notes:
 > - Limits stay well clear of +1.05 and -2.09 rad, where the femur is vertical and the kinematics become undefined (singularity).
