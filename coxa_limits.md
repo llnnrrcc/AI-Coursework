@@ -1,6 +1,14 @@
 ## Pair B - B1: Coxa limits (left side)
 
-Tested on L1 (`angles[0]`), viewed from directly above.
+Setup: one left leg at a time, coxa changed, femur and tibia at 0. Viewed from directly above. Angles in radians (1 rad ≈ 57.3°).
+
+**What counted as "realistic":** the leg doesn't touch or cross its neighbour, stays on its own side of the body, and stays inside the range a real spider uses.
+
+**Real spider ranges** come from Wang et al. (2011), "Movement behavior of a spider on a horizontal surface", Chinese Science Bulletin 56(25), Table 3, doi:10.1007/s11434-011-4584-y. They measure each leg's deflection angle: how far round from the spider's forward axis it points, seen from above.
+
+**Converting coxa to a real angle:** angle from forward ≈ resting angle + (coxa × 57.3). Resting angles in our model: L1 45°, L2 75°, L3 105°, L4 135°.
+
+### Front leg (L1, `angles[0]`)
 
 | Coxa angle (rad) | swing       | contact L2? | Crosses head? |                Looks realistic?                              |
 |------------------|-------------|-------------|---------------|     ----------------------------------------                 |
