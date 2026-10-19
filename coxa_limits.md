@@ -32,7 +32,6 @@ Setup: one left leg at a time, coxa changed, femur and tibia at 0. Viewed from d
 | 0.4              | backwards  |   no        |           no                  |      yes   - 158 degrees, near back of range  |
 | 0.6              | backwards  |   no        |         no                    |      no - 7 degrees past maximum              |
 
-### Result
 
 ### Narrowing the edges
 
@@ -49,6 +48,29 @@ Extra values between the main sweep steps, where the verdict flips. Checks wheth
 
 None of these touch a neighbour, so every verdict here comes from the paper's range. Each edge falls between two tested values, right where the paper puts it: L1's forward limit between -0.65 and -0.6 (paper: -0.62), L4's lower limit between 0.1 and 0.15 (paper: 0.14), and L4's upper limit between 0.45 and 0.5 (paper: 0.47).
 
-- **Coxa minimum:** ___ rad, because ___
-- **Coxa maximum:** ___ rad, because ___
-- **Front and back legs need different ranges?** ___
+### Result
+
+Each leg needs its own coxa range. One shared range doesn't work, because L1's and L4's realistic ranges don't overlap at all.
+
+| Leg | Coxa min (rad) | Coxa max (rad) | Source |
+|---|---|---|---|
+| L1 (front) | -0.62 | 0.00 | Tested: realistic from -0.6 to 0, edge confirmed between -0.65 and -0.6. Matches the paper (9° to 45°) |
+| L2 | -0.62 | -0.01 | Paper only (39° to 74°), not tested |
+| L3 | -0.54 | +0.38 | Paper only (74° to 127°), not tested |
+| L4 (back) | +0.14 | +0.47 | Tested: edges confirmed between 0.1 and 0.15, and between 0.45 and 0.5. Matches the paper (143° to 162°) |
+
+- **Front leg:** works forwards of its resting position. Positive values swing it back into L2's space and past where a real front leg stops.
+- **Back leg:** works behind its resting position. Negative values swing it forwards into L3, and 0.5 or more goes past a real back leg's maximum.
+- **Middle legs:** taken from the paper rather than tested, since they sit between the two end legs we checked. L3 is the only leg whose range covers both sides of its resting position, and it has the largest swing (about 52°).
+
+**Rejected alternative:** one shared coxa range for all legs (e.g. -0.4 to +0.4). It would let front legs swing back into L2 and stop back legs reaching their real working range.
+
+**Why per-leg ranges here, when A2 rejected per-leg tibia limits:** the tibia works the same on every leg, so one range fits all. The coxa doesn't, because each leg is attached at a different angle around the body (45°, 75°, 105°, 135°), so the same coxa value points each leg in a different direction. Per-leg ranges also don't enlarge the search space: each leg still has one coxa gene, just with different bounds.
+
+**Recommendation for the standing pose:** Pair A's standing pose uses coxa 0 on every leg, but 0 is the backward limit for L1 and just outside L4's range. Using the middle of each leg's range instead (about -0.31 for L1 and +0.30 for L4) gives every leg room to swing both ways.
+
+> Notes:
+> - The right side mirrors these ranges with the sign flipped (B2 to confirm).
+> - The coxa rotates around the vertical axis at the hip, so it never changes foot height. Unlike the femur and tibia, its limits don't depend on the other joints, so no combined sweep was needed.
+> - The model's leg lengths and attachment points differ from the real spider, so these ranges should be checked against the model when the gait runs.
+> - Angle conversions and Result wording drafted with Claude's help; all poses were run and checked by me in explore.py.
