@@ -221,3 +221,5 @@ __marimo__/
 .DS_Store
 *.mp4
 *.gif
+
+explore.py
