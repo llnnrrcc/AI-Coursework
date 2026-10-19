@@ -108,6 +108,6 @@ if __name__ == "__main__":
     for label, joints in zip(LEG_LABELS, legs):
         print(label, np.round(joints[3], 3))
     test = np.zeros(24)
-    test[1], test[2] = -0.8, -1.2   # bend L1's femur and tibia down
+    test[1], test[2] = -0.4, -1.5   # L1 in the agreed standing pose
     plot_spider_pose(test)
 
