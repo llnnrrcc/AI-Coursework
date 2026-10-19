@@ -94,12 +94,14 @@ Note: threshold reasoning drafted with Claude's help; I checked it by running my
 
 ## Standing pose (done with A1)
 
-Candidate to confirm in `explore.py`: femur -0.5 and tibia -1.4 on all eight legs (calculated foot z -0.365, reach 1.93, near the lowest foot point). The first-pass standing pose from the plan (femur -0.8, tibia -1.2) is outside the agreed femur range.
+Floor: z = -0.30, with a contact band of -0.35 to -0.25 (a foot counts as planted inside the band).
+
+Standing pose to confirm in `explore.py`: femur -0.4 and tibia -1.5 on all eight legs. Calculated foot z -0.295 (0.005 from the floor), reach 1.93, tibia flexion about 86 degrees. All eight feet should read the same z. The femur sits in the range where planting works (-0.5 to about -0.32), so the GA can move either way from it. Gentler alternative: femur -0.45 and tibia -1.3 (z -0.290, reach 2.07, flexion 74 degrees). The first-pass pose from the plan (femur -0.8, tibia -1.2) is outside the agreed femur range, and my earlier candidate (femur -0.5, tibia -1.4) was worked out for a floor of -0.35, so it is superseded.
 
 | Joint | Value (rad) |
 | --- | --- |
-| Femur | |
-| Tibia | |
+| Femur | -0.4 |
+| Tibia | -1.5 |
 
-L1 foot z in the standing pose: 
-All eight feet at the same height? 
+L1 foot z in the standing pose: -0.295 (calculated, to confirm by running `explore.py`)
+All eight feet at the same height? Yes by calculation (all read -0.295); to confirm by running `explore.py`
