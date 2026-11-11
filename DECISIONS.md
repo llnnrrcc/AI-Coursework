@@ -72,6 +72,8 @@ Each joint has three genes, each with a fixed range:
 
 The joint moves within centre ± size × (distance from centre to the nearer limit), so every chromosome decodes to angles inside the limits. Initialisation draws each gene from its range, and mutation keeps it there (timing wraps round, since 1 is the same point in the cycle as 0).
 
+**Exception for the coxa's timing:** to keep the leg teams fixed (see "Symmetry and leg teams"), the coxa's timing gene runs from -0.125 to +0.125 instead of 0 to 1, and is added to its team's timing: 0 for L1 and L3, 0.5 for L2 and L4. That lets each coxa shift by up to an eighth of a cycle, but never far enough to move the leg into the other team. Mutation keeps it within -0.125 to +0.125 rather than wrapping round. Femur and tibia timing stay at 0 to 1.
+
 ### Crossover by leg
 
 Genes are stored leg by leg (L1, L2, L3, L4; the right side mirrors them), 9 genes per leg. Crossover takes each leg whole from one parent or the other. A step only works when a leg's joints are coordinated, for example the femur lifting while the coxa swings forward, so swapping whole legs keeps each working leg intact while still mixing the parents.
