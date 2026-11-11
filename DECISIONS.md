@@ -35,6 +35,8 @@ A chromosome is 36 genes: for each of the 12 joints on the left legs, three numb
 
 Smooth by design, so there are no sudden jumps between frames. 5 whole cycles in 300 frames means one step takes 60 frames.
 
+**Starting values:** the table below shows the standing pose, which is where each joint's centre starts. The GA can then move each centre anywhere within the joint's limits (see "Keeping genes inside the joint limits" below), so the offsets and maximum amplitudes here only apply at the start.
+
 | Joint | Offset | Max amplitude | Limits |
 |---|---|---|---|
 | Femur | -0.4 | 0.1 | -0.5 to -0.2 |
