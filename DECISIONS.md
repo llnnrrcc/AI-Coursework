@@ -29,6 +29,8 @@ A chromosome is 36 genes: for each of the 12 joints on the left legs, three numb
 
 `angle(t) = offset + amplitude * sin(2 * pi * 5 * t / 300 + phase)`
 
+In the formula, offset = centre, amplitude = size × (distance from centre to the nearer limit), and phase = 2π × timing. So the ±π/4 coxa window is the same as -0.125 to +0.125 in timing units.
+
 Smooth by design, so there are no sudden jumps between frames. 5 whole cycles in 300 frames means one step takes 60 frames.
 
 **Starting values:** the table below shows the standing pose, which is where each joint's centre starts. The GA can then move each centre anywhere within the joint's limits (see "Keeping genes inside the joint limits" below), so the offsets and maximum amplitudes here only apply at the start.
@@ -44,7 +46,7 @@ Smooth by design, so there are no sudden jumps between frames. 5 whole cycles in
 
 Right-side coxa: same amplitude, offset sign flipped. Femur and tibia are the same on every leg.
 
-**Why:** the offsets are the standing pose from section 2, and each maximum amplitude is the distance from the offset to the nearest limit, so no wave leaves its joint's range. Whole cycles loop cleanly: the gap between the last and first frame equals one normal frame step (checked on all eight legs). Cycle count changes only speed, so 5 is a judgment call (1 cycle looks like slow motion, 8 looks jittery on the plot).
+- **Why fixed:** real spiders walk in these teams (Wang et al., 2011), and fixing them means half the legs are always in their stance half of the step, spread across both sides of the body. The GA would otherwise have to discover this pattern by trial and error. Neighbouring legs in opposite teams do pass closest at the turnaround, where L1 and L2's feet come within 0.56 (against 1.59 if they moved in step), but their leg segments stay at least 0.49 apart, so they never cross. `fitness.py` should still penalise neighbouring feet that get too close. To stop the GA undoing the teams, each coxa's timing gene is limited to a small window around its team's timing.
 
 **Known weakness:** a pure wave cannot hold a foot still on the ground for part of the step. It also pushes the foot through the floor. With the waves centred on the standing pose, which sits on the floor, and the femur and tibia moving in step, L1's foot is below -0.35 for about 32% of each step (amplitudes 0.1 and 0.2). The timing between the femur and tibia matters more than where the waves are centred. Half a step apart, the foot is never below the floor and sits in the contact band for 82% of the step, but it only reaches z = -0.24, about 0.06 above the floor, so the leg would shuffle instead of stepping. Centring higher (femur -0.35, tibia -1.4, amplitudes 0.15 and 0.3) with the timing half a step apart gave 0% below the floor, 28% in the band and a highest foot of -0.16, about 0.14 above the floor. Femur and tibia timing are both genes, so the GA can find the balance between never going below the floor and lifting enough to step. This is not a blocker, and the centres can stay at the standing pose. `fitness.py` should make the below-floor penalty grow with how far below the foot goes, and reward a foot that lifts during the swing, or the GA will learn to shuffle. A duty-cycle gene or a flattened bottom is an option for a second version. The 32% finding and the -0.35 / -1.4 idea came from Claude. The numbers are for L1. I checked them by running them in `explore.py`.
 
@@ -102,7 +104,7 @@ Each of the 24 joints has its own offset, amplitude and phase. Rejected because:
 Every phase gene free, with the fitness function rewarding four feet on the ground. Rejected because:
 
 - **The GA would have to discover the team pattern by trial and error,** which may not happen in the time available.
-- **Until it does, neighbouring legs can swing into each other,** since their coxa ranges overlap (L1 and L2's feet came within 0.56).
+- **Until it does, the legs have no consistent pattern,** so the spider may not keep half its legs in stance at any moment.
 - **Real spiders use these teams** (Wang et al., 2011), so building them in costs no realism.
 
 ### Clipping angles to the limits afterwards
