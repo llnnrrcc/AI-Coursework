@@ -60,6 +60,21 @@ Right-side coxa: same amplitude, offset sign flipped. Femur and tibia are the sa
 
 **Origin:** the wave design was proposed by Claude. The cycle and floor numbers were run in the model with Claude's help.
 
+### Keeping genes inside the joint limits
+
+Each joint has three genes, each with a fixed range:
+
+| Gene | Range | Meaning |
+|---|---|---|
+| Centre | The joint's limits (min to max) | The middle of the movement |
+| Size | 0 to 1 | How far the joint moves, as a fraction of the room between the centre and the nearer limit |
+| Timing | 0 to 1 | Where in the cycle the movement happens |
+
+The joint moves within centre ± size × (distance from centre to the nearer limit), so every chromosome decodes to angles inside the limits. Initialisation draws each gene from its range, and mutation keeps it there (timing wraps round, since 1 is the same point in the cycle as 0).
+
+### Crossover by leg
+
+Genes are stored leg by leg (L1, L2, L3, L4; the right side mirrors them), 9 genes per leg. Crossover takes each leg whole from one parent or the other. A step only works when a leg's joints are coordinated, for example the femur lifting while the coxa swings forward, so swapping whole legs keeps each working leg intact while still mixing the parents.
 
 ## 4. Rejected options
 
@@ -89,3 +104,17 @@ Every phase gene free, with the fitness function rewarding four feet on the grou
 - **The GA would have to discover the team pattern by trial and error,** which may not happen in the time available.
 - **Until it does, neighbouring legs can swing into each other,** since their coxa ranges overlap (L1 and L2's feet came within 0.56).
 - **Real spiders use these teams** (Wang et al., 2011), so building them in costs no realism.
+
+### Clipping angles to the limits afterwards
+
+Genes could take any value, with angles clipped to the joint limits when decoding. Rejected because:
+
+- **Movement would stall at the limits:** any part of a wave beyond a limit becomes a flat stretch, so the joint stops abruptly and holds still.
+- **The search would waste effort:** many different chromosomes would decode to the same clipped movement, so the fitness could not tell them apart and the GA would have no direction to improve in.
+
+### Unrestricted crossover
+
+Crossover could cut anywhere in the gene list. Rejected because:
+
+- **It could split a joint:** a joint's centre could come from one parent and its size from the other. Size is measured from the centre, so the movement would change unpredictably.
+- **It could split a leg:** the femur's timing could come from one parent and the coxa's from the other, so the lift would no longer line up with the forward swing and the foot would drag.
