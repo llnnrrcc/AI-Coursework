@@ -66,9 +66,9 @@ Results:
 
 - Reach passes everywhere. The lowest reach in the whole grid is 1.63, against the threshold of 1.5, for both femur ranges. The tibia range of -1.7 to 0.0 is accepted.
 - Standing depends on the femur. For femur -0.5 to -0.2, the foot is below the body (z under 0) in 42% of the combinations and at least 0.2 below it in 20%. For femur -0.5 to 0.0 those figures are 30% and 12%. Stance poses sit in the corner with the femur near -0.5 and the tibia between -1.7 and -1.0. At femur -0.1 or above the foot is level with or above the body even at tibia -1.7.
-- The deepest foot anywhere is z = -0.383 (femur -0.5, tibia about -1.6), so the ground has to sit at about -0.35 for the spider to touch it.
+- The deepest foot anywhere is z = -0.383 (femur -0.5, tibia about -1.6). The group set the floor at -0.30 (see Standing pose below), so feet can plant across about 60% of the femur range and the rest is for lifting legs.
 - Swing is possible: raising the tibia from -1.7 toward -0.5 lifts the foot from z = -0.378 to 0.158 at femur -0.5, giving clearance for a leg to leave the ground.
-- Open point: the femur range has been quoted three ways (-0.5 to -0.2, -0.5 to 0.0, and a tighter -0.2 to 0.0 from Wang's measurements). The tibia verdict is the same for the first two. A range of -0.2 to 0.0 would leave almost no stance poses, because the foot barely gets below the body, so it needs confirming with A1 before the group fixes it.
+- Settled: the group's femur range is -0.5 to -0.2 (`DECISIONS.md` section 1). The tibia verdict is the same under the earlier -0.5 to 0.0, so the limits above stand.
 
 ## How I'm defining "realistic"
 
@@ -96,12 +96,12 @@ Note: threshold reasoning drafted with Claude's help; I checked it by running my
 
 Floor: z = -0.30, with a contact band of -0.35 to -0.25 (a foot counts as planted inside the band).
 
-Standing pose to confirm in `explore.py`: femur -0.4 and tibia -1.5 on all eight legs. Calculated foot z -0.295 (0.005 from the floor), reach 1.93, tibia flexion about 86 degrees. All eight feet should read the same z. The femur sits in the range where planting works (-0.5 to about -0.32), so the GA can move either way from it. Gentler alternative: femur -0.45 and tibia -1.3 (z -0.290, reach 2.07, flexion 74 degrees). The first-pass pose from the plan (femur -0.8, tibia -1.2) is outside the agreed femur range, and my earlier candidate (femur -0.5, tibia -1.4) was worked out for a floor of -0.35, so it is superseded.
+Agreed standing pose (`DECISIONS.md` section 2): femur -0.4 and tibia -1.5 on all eight legs, with coxa at the middle of each leg's range, which does not change foot height. Confirmed by running `explore.py` on L1: foot z -0.295 (0.005 from the floor), reach 1.93. Tibia flexion is about 86 degrees. All eight feet read z -0.295 in the group's check (`joint_limits_summary.md`). The femur sits in the range where planting works (-0.5 to about -0.32), so the GA can move either way from it. Gentler alternative: femur -0.45 and tibia -1.3 (z -0.290, reach 2.07, flexion 74 degrees). The first-pass pose from the plan (femur -0.8, tibia -1.2) is outside the agreed femur range, and my earlier candidate (femur -0.5, tibia -1.4) was worked out for a floor of -0.35, so it is superseded.
 
 | Joint | Value (rad) |
 | --- | --- |
 | Femur | -0.4 |
 | Tibia | -1.5 |
 
-L1 foot z in the standing pose: -0.295 (calculated, to confirm by running `explore.py`)
-All eight feet at the same height? Yes by calculation (all read -0.295); to confirm by running `explore.py`
+L1 foot z in the standing pose: -0.295 (confirmed in `explore.py`)
+All eight feet at the same height? Yes, all read -0.295
