@@ -30,3 +30,17 @@ The full per-leg table with slot numbers is in `joint_limits_summary.md`.
 ## 3. Chromosome design
 
 ## 4. Rejected options
+
+## 4. Rejected options
+
+## 4. Rejected options
+
+### Every angle for every frame (7,200 genes)
+
+One gene per joint per frame (300 × 24). Rejected because:
+
+- **Crossover would break the walk:** a cut at any frame joins two gaits that are almost certainly in different poses at that moment, so the child would jump between them in a single frame.
+- **Mutation would cause twitches:** each gene controls one joint in one frame, so a mutation changes that frame alone and the leg flicks out of place and back.
+- **The search space would be too large:** 7,200 genes against 36 for the wave design (section 3). A walk is smooth and repeating, but this encoding would have to discover both frame by frame instead of having them built in.
+
+Adding a smoothness penalty to the fitness would not fix this, because crossover and mutation would keep creating jumps and twitches every generation.
