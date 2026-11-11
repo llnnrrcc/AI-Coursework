@@ -51,4 +51,4 @@ Version 1 rewarded feet inside the contact band. Standing still scored the maxim
 
 ## How this was made
 
-Claude proposed the structure (support, lift and below floor) and wrote the code for the three terms and the hand-made gaits above. I ran version 1 myself: standing 1.000, random mean 0.094 over 20 random chromosomes. The scores for the current weights and the hand-made gaits were run with Claude's help and I still need to re-run them on my laptop.
+Claude proposed the structure (support, lift and below floor) and wrote the code for the three terms and the hand-made gaits above. I ran `fitness.py` myself with the current weights: standing 1.000, random mean 0.484 and best 1.036 over 20 random chromosomes, and about 0.08 s per call. The 200-chromosome average and the hand-made gait scores were run with Claude's help, and I have not re-run them on my laptop.
