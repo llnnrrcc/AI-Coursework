@@ -1,9 +1,5 @@
 # Design decisions
 
-Draft: joint limits and ground height awaiting group sign-off. Chromosome design drafted in section 3, awaiting sign-off.
-
-Each decision links to the file holding the full evidence.
-
 ## 1. Joint limits
 
 | Joint | Range (rad) | Applies to | Evidence |
