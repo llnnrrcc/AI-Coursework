@@ -29,7 +29,7 @@ The full per-leg table with slot numbers is in `joint_limits_summary.md`.
 
 ## 3. Chromosome design
 
-A chromosome is 72 genes: for each of the 24 joints, three numbers (offset, amplitude, phase). Each joint angle over the 300 frames is a repeating wave:
+A chromosome is 36 genes: for each of the 12 joints on the left legs, three numbers (offset, amplitude, phase). The right legs copy the left (see "Symmetry and leg teams" below). Each joint angle over the 300 frames is a repeating wave:
 
 `angle(t) = offset + amplitude * sin(2 * pi * 5 * t / 300 + phase)`
 
@@ -50,11 +50,16 @@ Right-side coxa: same amplitude, offset sign flipped. Femur and tibia are the sa
 
 **Known weakness:** a pure wave cannot hold a foot still on the ground for part of the step. Worse, the standing pose sits on the floor, so a wave centred on it puts about 32% of frames below -0.35 (foot z runs from -0.378 to -0.125 over a cycle) and the below-floor penalty fires constantly. Open for the group: centre the offsets above the standing pose (for example femur -0.35, tibia -1.4, not yet tested), or add a duty-cycle gene or a flattened bottom in a second version.
 
+**Symmetry and leg teams:**
+
+- **Right legs copy the left.** Each right leg uses its left partner's genes, half a step later (a phase shift of pi, which is 30 frames at 60 frames per step). The right coxa is also the negative of the left coxa, so the leg mirrors across the body. Femur and tibia copy directly. This halves the chromosome from 72 genes to 36. The cost is that the spider cannot turn, but the brief and the provided video only need straight-line walking.
+
+- **The legs walk in two fixed teams.** Team 1 is L1, L3, R2, R4, and team 2 is L2, L4, R1, R3, as measured on real spiders (Wang et al., 2011). Team 2 moves half a step after team 1, so four feet are always on the ground. L1 and L3 have no added timing, L2 and L4 have half a step added, and the right-leg copying above then puts R2 and R4 in team 1 and R1 and R3 in team 2 automatically.
+
+- **Why fixed:** neighbouring legs are always in opposite teams, so they never swing through the same space at the same time. This removes the overlap found on Day 3, where L1 and L2's feet came within 0.56 of each other (`joint_limits_summary.md`, open point 2). To stop the GA undoing the teams, each coxa's phase gene is limited to a small window (plus or minus pi/4) around its team's timing. Femur and tibia phases stay free, so the GA can still choose when in the step each leg lifts.
+
 **Origin:** the wave design was proposed by Claude. The cycle and floor numbers were run in the model with Claude's help.
 
-## 4. Rejected options
-
-## 4. Rejected options
 
 ## 4. Rejected options
 
@@ -67,3 +72,20 @@ One gene per joint per frame (300 × 24). Rejected because:
 - **The search space would be too large:** 7,200 genes against 36 for the wave design (section 3). A walk is smooth and repeating, but this encoding would have to discover both frame by frame instead of having them built in.
 
 Adding a smoothness penalty to the fitness would not fix this, because crossover and mutation would keep creating jumps and twitches every generation.
+
+
+### Independent genes for every leg (72 genes)
+
+Each of the 24 joints has its own offset, amplitude and phase. Rejected because:
+
+- **It doubles the search space for no benefit:** straight-line walking needs left and right to mirror anyway, so the GA would spend its time rediscovering symmetry that can be built in.
+- **The extra freedom only buys turning,** which the brief and the provided video do not require.
+- **If turning is needed later,** one extra gene that lengthens one side's steps would allow gentle turns, without going back to 72.
+
+### Letting the GA find the leg teams
+
+Every phase gene free, with the fitness function rewarding four feet on the ground. Rejected because:
+
+- **The GA would have to discover the team pattern by trial and error,** which may not happen in the time available.
+- **Until it does, neighbouring legs can swing into each other,** since their coxa ranges overlap (L1 and L2's feet came within 0.56).
+- **Real spiders use these teams** (Wang et al., 2011), so building them in costs no realism.
