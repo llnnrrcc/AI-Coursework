@@ -78,6 +78,14 @@ The joint moves within centre ± size × (distance from centre to the nearer lim
 
 Genes are stored leg by leg (L1, L2, L3, L4; the right side mirrors them), 9 genes per leg. Crossover takes each leg whole from one parent or the other. A step only works when a leg's joints are coordinated, for example the femur lifting while the coxa swings forward, so swapping whole legs keeps each working leg intact while still mixing the parents.
 
+### Selection and elitism
+
+**Tournament selection (size 3):** to choose each parent, three chromosomes are picked at random and the one with the highest fitness wins. Fitter chromosomes win more often, so they have more children, but weaker ones still win sometimes when they meet even weaker opponents, which keeps variety in the population. Tournament selection only compares scores, so it works with negative fitness values, which the below-floor penalty can produce.
+
+**Elitism (2):** the two best chromosomes in each generation are copied unchanged into the next one, so the best solution found so far can never be lost to crossover or mutation. In the first test run, the best fitness never dropped from one generation to the next.
+
+**Starting settings:** population 40, 50 generations, mutation rate 0.1, tournament size 3, elitism 2. With fitness taking about 0.06 seconds per call, a run takes about 2 minutes. All settings are constants at the top of `ga.py`, so experiments only change one number. Each run uses a seeded random generator, so the same seed gives the same starting population.
+
 ## 4. Rejected options
 
 ### Every angle for every frame (7,200 genes)
@@ -120,3 +128,11 @@ Crossover could cut anywhere in the gene list. Rejected because:
 
 - **It could split a joint:** a joint's centre could come from one parent and its size from the other. Size is measured from the centre, so the movement would change unpredictably.
 - **It could split a leg:** the femur's timing could come from one parent and the coxa's from the other, so the lift would no longer line up with the forward swing and the foot would drag.
+
+
+### Roulette wheel selection
+
+Each chromosome's chance of being picked is proportional to its fitness. Rejected because:
+
+- **It cannot handle negative scores:** the below-floor penalty can make fitness negative, and a negative share of the wheel has no meaning.
+- **One strong chromosome can take over:** if one score is much higher than the rest, it is picked almost every time, and the population loses variety quickly.
