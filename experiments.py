@@ -61,10 +61,10 @@ def run_once(settings, seed, generations):
     for name, value in settings.items():
         setattr(ga, name, value)          # ga.py reads these names each time it runs
     ga.GENERATIONS = generations
-    # ga.py calls crossover() and mutate() without its seeded generator, so they each make
-    # an unseeded one and no two runs match. Give them one seeded generator here, so a seed
-    # always gives the same run. (If ga.py is changed to pass its own rng to the operators,
-    # this still works.)
+    # ga.py passes its own seeded generator to crossover() and mutate(). Here they get a
+    # separate generator seeded from the same seed instead, so each run still depends only
+    # on its seed. This is how the results in experiments.md were produced, so keep it to
+    # reproduce them exactly. (It was first added when ga.py did not pass its generator.)
     operator_rng = np.random.default_rng(seed + 1000)
     # run_ga prints every generation and saves best_chromosome.npy. Silence the printing and
     # block the save, so an experiment never overwrites the saved best.
