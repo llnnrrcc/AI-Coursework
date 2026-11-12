@@ -37,10 +37,10 @@ def next_generation(population, scores, rng):
     while len(new_population) < POPULATION_SIZE:
         parent1 = tournament_select(population, scores, rng)
         parent2 = tournament_select(population, scores, rng)
-        child1, child2 = crossover(parent1, parent2)
-        new_population.append(mutate(child1, MUTATION_RATE))
+        child1, child2 = crossover(parent1, parent2, rng)
+        new_population.append(mutate(child1, MUTATION_RATE, rng))
         if len(new_population) < POPULATION_SIZE:
-            new_population.append(mutate(child2, MUTATION_RATE))
+            new_population.append(mutate(child2, MUTATION_RATE, rng))
 
     return np.array(new_population)
 
