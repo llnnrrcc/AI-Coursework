@@ -49,6 +49,23 @@ class Network:
 
         return float(np.mean((outputs - targets) ** 2))
     
+    def save(self, filename):
+        """Save the layer sizes, weights and biases to one .npz file."""
+        arrays = {"layer_sizes": np.array(self.layer_sizes)}
+        for i, (w, b) in enumerate(zip(self.weights, self.biases)):
+            arrays[f"weights_{i}"] = w
+            arrays[f"biases_{i}"] = b
+        np.savez(filename, **arrays)
+
+    @classmethod
+    def load(cls, filename):
+        """Rebuild a saved network from its .npz file."""
+        data = np.load(filename)
+        net = cls(list(data["layer_sizes"]))
+        net.weights = [data[f"weights_{i}"] for i in range(len(net.weights))]
+        net.biases = [data[f"biases_{i}"] for i in range(len(net.biases))]
+        return net
+    
 def loss(net, inputs, targets):
     """Half the sum of squared errors: the quantity backpropagation computes the gradient of."""
     outputs = net.forward(inputs)
@@ -80,5 +97,11 @@ def gradient_check(net, inputs, targets, epsilon=1e-5):
 if __name__ == "__main__":
     net = Network([2, 16, 24])
     print("gradient check, 1 hidden layer:", gradient_check(net, [0.0, 1.0], np.linspace(0.2, 0.8, 24)))
+
     net = Network([2, 16, 16, 24], seed=3)
     print("gradient check, 2 hidden layers:", gradient_check(net, [0.3, -0.9], np.linspace(0.8, 0.1, 24)))
+
+    net.save("test_model.npz")
+    
+    loaded = Network.load("test_model.npz")
+    print("save and load match:", np.allclose(net.forward([0.3, -0.9]), loaded.forward([0.3, -0.9])))
