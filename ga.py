@@ -6,7 +6,7 @@ from operators import crossover, mutate
 from fitness_graph import plot_fitness_history
 
 # --- GA settings (change these to run experiments) ---
-POPULATION_SIZE = 40    # how many chromosomes in each generation
+POPULATION_SIZE = 80    # how many chromosomes in each generation
 GENERATIONS = 50        # how many times the main loop runs
 MUTATION_RATE = 0.1     # chance of each gene changing, passed to mutate()
 TOURNAMENT_SIZE = 3     # how many chromosomes compete in each selection
@@ -44,7 +44,7 @@ def next_generation(population, scores, rng):
 
     return np.array(new_population)
 
-def run_ga(seed=42):
+def run_ga(seed=1):
     """Run the whole GA. Returns the best chromosome and the fitness history."""
     rng = np.random.default_rng(seed)
     population = initial_population(rng)
