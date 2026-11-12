@@ -11,9 +11,9 @@ from chromosome import N_GENES, LOW, HIGH
 
 
 def crossover(p1, p2, rng=None):
+    """Create two children by exchanging complete leg blocks."""
     if rng is None:
         rng = np.random.default_rng()
-    """Create two children by exchanging complete leg blocks."""
     p1 = np.asarray(p1, dtype=float)
     p2 = np.asarray(p2, dtype=float)
 
@@ -38,9 +38,10 @@ def crossover(p1, p2, rng=None):
 
 
 def mutate(chromosome, rate, rng=None):
+    """Mutate genes while keeping all values within their bounds."""
+    
     if rng is None:
         rng = np.random.default_rng()
-    """Mutate genes while keeping all values within their bounds."""
     chromosome = np.asarray(chromosome, dtype=float)
 
     if chromosome.shape != (N_GENES,):
