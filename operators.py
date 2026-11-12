@@ -10,7 +10,9 @@ import numpy as np
 from chromosome import N_GENES, LOW, HIGH
 
 
-def crossover(p1, p2):
+def crossover(p1, p2, rng=None):
+    if rng is None:
+        rng = np.random.default_rng()
     """Create two children by exchanging complete leg blocks."""
     p1 = np.asarray(p1, dtype=float)
     p2 = np.asarray(p2, dtype=float)
@@ -28,14 +30,16 @@ def crossover(p1, p2):
         end = start + 9
 
         # Randomly choose whether to swap this entire leg
-        if np.random.random() < 0.5:
+        if rng.random() < 0.5:
             child1[start:end] = p2[start:end]
             child2[start:end] = p1[start:end]
 
     return child1, child2
 
 
-def mutate(chromosome, rate):
+def mutate(chromosome, rate, rng=None):
+    if rng is None:
+        rng = np.random.default_rng()
     """Mutate genes while keeping all values within their bounds."""
     chromosome = np.asarray(chromosome, dtype=float)
 
@@ -49,10 +53,10 @@ def mutate(chromosome, rate):
 
     for i in range(N_GENES):
         # Each gene has 'rate' probability of being changed
-        if np.random.random() < rate:
+        if rng.random() < rate:
 
             # Small change relative to the gene's allowed range
-            change = np.random.normal(
+            change = rng.normal(
                 0, 0.05 * (HIGH[i] - LOW[i])
             )
 

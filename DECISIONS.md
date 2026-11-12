@@ -78,6 +78,16 @@ The joint moves within centre ± size × (distance from centre to the nearer lim
 
 Genes are stored leg by leg (L1, L2, L3, L4; the right side mirrors them), 9 genes per leg. Crossover takes each leg whole from one parent or the other. A step only works when a leg's joints are coordinated, for example the femur lifting while the coxa swings forward, so swapping whole legs keeps each working leg intact while still mixing the parents.
 
+### Mutation
+
+The genetic algorithm uses a mutation rate of 0.1, meaning each gene has a 10% probability of being mutated. Selected genes receive a small random adjustment from a normal distribution, with a standard deviation equal to 5% of the gene's allowed range. This allows the algorithm to introduce variation without usually making large changes to an existing movement pattern.
+
+Centre and size genes are clipped to their permitted bounds after mutation. Coxa timing is also clipped to its restricted range of -0.125 to +0.125 to preserve the predefined leg teams. Femur and tibia timing use wrap-around because timing represents a repeating cycle, so a value of 1.1 becomes 0.1.
+
+We considered replacing genes with completely random values instead of making small adjustments. Although this could introduce greater variation, it might also disrupt useful combinations of movement parameters. Small Gaussian adjustments were therefore chosen as the initial approach.
+
+Whole-leg crossover preserves coordinated leg movements, but two fixed parents can produce at most 16 different block combinations. Mutation introduces new values that crossover alone cannot create, helping maintain diversity in the population.
+
 ### Selection and elitism
 
 **Tournament selection (size 3):** to choose each parent, three chromosomes are picked at random and the one with the highest fitness wins. Fitter chromosomes win more often, so they have more children, but weaker ones still win sometimes when they meet even weaker opponents, which keeps variety in the population. Tournament selection only compares scores, so it works with negative fitness values, which the below-floor penalty can produce.
