@@ -9,6 +9,10 @@ Run from inside the AI-Coursework folder:
     python experiments.py                       the full set (about an hour)
     python experiments.py --generations 5 --seeds 1 --out test_run      a quick test
 
+Runs are independent, so they are spread over several CPU cores at once (--workers,
+default: all cores but one). Each run is seeded on its own, so the results are the same
+whatever the number of workers.
+
 Outputs go in the output folder (default experiment_results):
     runs.jsonl      every run's best and average fitness for every generation
     summary.csv     one row per setting value, averaged over the seeds
@@ -24,6 +28,7 @@ import io
 import json
 import os
 import time
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from unittest import mock
 
 import matplotlib
@@ -156,29 +161,41 @@ def main():
     parser.add_argument("--generations", type=int, default=ga.GENERATIONS)
     parser.add_argument("--seeds", type=int, default=3, help="seeds per setting (1, 2, 3, ...)")
     parser.add_argument("--out", default="experiment_results")
+    parser.add_argument("--workers", type=int, default=max(1, (os.cpu_count() or 2) - 1),
+                        help="runs at the same time (default: all CPU cores but one)")
     args = parser.parse_args()
 
     os.makedirs(args.out, exist_ok=True)
     runs_path = os.path.join(args.out, "runs.jsonl")
     runs = load_runs(runs_path, args.generations)
 
-    start = time.time()
+    # Every run still to do. The default settings appear in every group but run once.
+    tasks = {}
     for name, values in VALUES.items():
         for value in values:
             settings = dict(DEFAULTS)
             settings[name] = value
             for seed in range(1, args.seeds + 1):
                 key = run_key(settings, seed)
-                if key in runs:
-                    continue          # the default settings appear in every group but run once
-                best, average = run_once(settings, seed, args.generations)
-                record = {"settings": settings, "seed": seed, "generations": args.generations,
-                          "best": best, "average": average}
-                runs[key] = record
-                with open(runs_path, "a") as f:
-                    f.write(json.dumps(record) + "\n")
-                print(f"{LABELS[name]} {value}, seed {seed}: final best {best[-1]:.3f} "
-                      f"(elapsed {(time.time() - start) / 60:.1f} min)")
+                if key not in runs:
+                    tasks[key] = (settings, seed)
+
+    start = time.time()
+    print(f"{len(tasks)} runs to do on {args.workers} workers")
+    with ProcessPoolExecutor(max_workers=args.workers) as pool:
+        futures = {pool.submit(run_once, settings, seed, args.generations): (settings, seed)
+                   for settings, seed in tasks.values()}
+        for done, future in enumerate(as_completed(futures), start=1):
+            settings, seed = futures[future]
+            best, average = future.result()
+            record = {"settings": settings, "seed": seed, "generations": args.generations,
+                      "best": best, "average": average}
+            runs[run_key(settings, seed)] = record
+            with open(runs_path, "a") as f:
+                f.write(json.dumps(record) + "\n")
+            print(f"[{done}/{len(tasks)}] population {settings['POPULATION_SIZE']}, "
+                  f"mutation {settings['MUTATION_RATE']}, tournament {settings['TOURNAMENT_SIZE']}, "
+                  f"seed {seed}: final best {best[-1]:.3f} (elapsed {(time.time() - start) / 60:.1f} min)")
 
     summarise(runs, args.generations, args.out)
     plot_settings(runs, args.generations, args.out)
