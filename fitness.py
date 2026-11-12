@@ -20,7 +20,7 @@ from gait import decode
 from spider_model import spider_joints
 
 FLOOR = -0.30
-BAND_LOW, BAND_HIGH = -0.35, -0.25   # a foot counts as planted inside this band
+BAND_LOW, BAND_HIGH = -0.35, -0.25   # a foot at or below BAND_HIGH is touching the floor; below BAND_LOW is too deep
 
 # Score every 5th frame only. One step is 60 frames, so that is 12 samples per step.
 # One call takes about 0.07 s instead of 0.38 s for all 300 frames, and the GA calls
@@ -99,12 +99,12 @@ def below_floor_penalty(feet):
 
 def support_reward(feet):
     """
-    The fraction of sampled frames in which at least 4 feet are planted (z inside the
-    contact band), from 0 to 1. This replaces the plain "feet in the band" term from
+    The fraction of sampled frames in which at least 4 feet are planted (z at or below
+    the top of the contact band), from 0 to 1. This replaces the plain "feet in the band" term from
     version 1, which also punished lifting a foot, because a lifted foot is out of the band.
     """
     z = feet[:, :, 2]
-    planted = (z >= BAND_LOW) & (z <= BAND_HIGH)
+    planted = z <= BAND_HIGH
     return float(np.mean(planted.sum(axis=1) >= MIN_PLANTED))
 
 
@@ -122,13 +122,13 @@ def forward_reward(feet):
     """
     How far planted feet sweep backwards (towards -x) between sampled frames, averaged
     over every foot and frame and divided by DX_TARGET, capped at 1. A foot counts as
-    planted in an interval if it is inside the contact band at both ends. A foot that
+    planted in an interval if it is below the top of the band at both ends. A foot that
     slides forwards while planted pushes the body backwards and cancels the reward.
     Standing still scores 0, and so do random gaits on average.
     """
     z = feet[:, :, 2]
     x = feet[:, :, 0]
-    planted = (z >= BAND_LOW) & (z <= BAND_HIGH)
+    planted = z <= BAND_HIGH
     both = planted[1:] & planted[:-1]
     backward = np.where(both, x[:-1] - x[1:], 0.0)
     return float(np.clip(np.mean(backward) / DX_TARGET, 0.0, 1.0))
