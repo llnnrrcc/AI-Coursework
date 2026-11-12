@@ -7,7 +7,7 @@ from fitness_graph import plot_fitness_history
 
 # --- GA settings (change these to run experiments) ---
 POPULATION_SIZE = 40    # how many chromosomes in each generation
-GENERATIONS = 50        # how many times the main loop runs
+GENERATIONS = 10        # how many times the main loop runs
 MUTATION_RATE = 0.1     # chance of each gene changing, passed to mutate()
 TOURNAMENT_SIZE = 3     # how many chromosomes compete in each selection
 ELITE_COUNT = 2         # how many of the best are copied unchanged into the next generation
@@ -44,16 +44,26 @@ def next_generation(population, scores, rng):
 
     return np.array(new_population)
 
-if __name__ == "__main__":
-    rng = np.random.default_rng(42)
+def run_ga(seed=42):
+    """Run the whole GA. Returns the best chromosome and the fitness history."""
+    rng = np.random.default_rng(seed)
     population = initial_population(rng)
-    print(population.shape)
-    print(np.all(population >= LOW), np.all(population <= HIGH))
-    scores = evaluate(population)
-    print(scores.shape, round(scores.max(), 3), round(scores.mean(), 3))
-    winners = [tournament_select(population, scores, rng) for _ in range(1000)]
-    print(round(evaluate(np.array(winners[:40])).mean(), 3))
-    new_population = next_generation(population, scores, rng)
-    new_scores = evaluate(new_population)
-    print(new_population.shape, round(new_scores.max(), 3), round(new_scores.mean(), 3))
+    best_history = []
+    average_history = []
 
+    for generation in range(GENERATIONS):
+        scores = evaluate(population)
+        best_history.append(scores.max())
+        average_history.append(scores.mean())
+        print(f"Generation {generation + 1}: best {scores.max():.3f}, average {scores.mean():.3f}")
+        population = next_generation(population, scores, rng)
+
+    # Score the final generation and save its best chromosome
+    scores = evaluate(population)
+    best = population[np.argmax(scores)]
+    np.save("best_chromosome.npy", best)
+    return best, best_history, average_history
+
+if __name__ == "__main__":
+    best, best_history, average_history = run_ga()
+    plot_fitness_history(best_history, average_history)
