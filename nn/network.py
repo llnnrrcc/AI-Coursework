@@ -23,11 +23,37 @@ class Network:
         for w, b in zip(self.weights, self.biases):
             self.activations.append(self.sigmoid(self.activations[-1] @ w + b))
         return self.activations[-1]
+    
+    def train_step(self, inputs, targets, learning_rate):
+        """Learn from one example: forward pass, backpropagation, then gradient descent. Returns the squared error."""
+        outputs = self.forward(inputs)
+        targets = np.asarray(targets, dtype=float)
+
+        # Output layer: the error, times the slope of sigmoid at each output
+        delta = (outputs - targets) * outputs * (1 - outputs)
+
+        # Work backwards through the layers
+        for layer in reversed(range(len(self.weights))):
+            layer_input = self.activations[layer]
+            weight_gradient = np.outer(layer_input, delta)
+            bias_gradient = delta
+
+            # Pass the blame back to the previous layer, using the weights before they change
+            if layer > 0:
+                delta = (delta @ self.weights[layer].T) * layer_input * (1 - layer_input)
+
+            # Gradient descent: step each weight against its gradient
+            self.weights[layer] -= learning_rate * weight_gradient
+            self.biases[layer] -= learning_rate * bias_gradient
+
+        return float(np.mean((outputs - targets) ** 2))
 
 
 if __name__ == "__main__":
     net = Network([2, 16, 24])
-    for w, b in zip(net.weights, net.biases):
-        print(w.shape, b.shape)
-    outputs = net.forward([0.0, 1.0])
-    print(outputs.shape, round(outputs.min(), 3), round(outputs.max(), 3))
+    inputs = [0.0, 1.0]
+    targets = np.linspace(0.2, 0.8, 24)
+    print("error before:", round(net.train_step(inputs, targets, 0.5), 5))
+    for _ in range(1000):
+        error = net.train_step(inputs, targets, 0.5)
+    print("error after 1000 steps:", round(error, 5))
