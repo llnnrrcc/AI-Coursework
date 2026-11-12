@@ -7,7 +7,7 @@ from fitness_graph import plot_fitness_history
 
 # --- GA settings (change these to run experiments) ---
 POPULATION_SIZE = 40    # how many chromosomes in each generation
-GENERATIONS = 10        # how many times the main loop runs
+GENERATIONS = 50        # how many times the main loop runs
 MUTATION_RATE = 0.1     # chance of each gene changing, passed to mutate()
 TOURNAMENT_SIZE = 3     # how many chromosomes compete in each selection
 ELITE_COUNT = 2         # how many of the best are copied unchanged into the next generation
