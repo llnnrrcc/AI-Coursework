@@ -112,10 +112,14 @@ def lift_reward(feet):
     """
     How far each foot rises above the top of the contact band at its highest point,
     as a fraction of LIFT_TARGET (capped at 1), averaged over the eight feet.
-    A spider that stands still scores 0.
+    A spider that stands still scores 0. A foot that never touches the floor (never at or
+    below the top of the band) gets no lift reward, so a leg held up in the air does not count.
     """
     highest = feet[:, :, 2].max(axis=0)
-    return float(np.mean(np.clip((highest - BAND_HIGH) / LIFT_TARGET, 0.0, 1.0)))
+    lowest = feet[:, :, 2].min(axis=0)
+    touches = lowest <= BAND_HIGH          # the foot comes down to the floor at some point
+    lift = np.clip((highest - BAND_HIGH) / LIFT_TARGET, 0.0, 1.0)
+    return float(np.mean(lift * touches))
 
 
 def forward_reward(feet):
@@ -124,14 +128,15 @@ def forward_reward(feet):
     over every foot and frame and divided by DX_TARGET, capped at 1. A foot counts as
     planted in an interval if it is below the top of the band at both ends. A foot that
     slides forwards while planted pushes the body backwards and cancels the reward.
-    Standing still scores 0, and so do random gaits on average.
+    Standing still scores 0. Sliding the wrong way scores below 0, down to -1, so the GA
+    can tell a slightly wrong gait from a very wrong one.
     """
     z = feet[:, :, 2]
     x = feet[:, :, 0]
     planted = z <= BAND_HIGH
     both = planted[1:] & planted[:-1]
     backward = np.where(both, x[:-1] - x[1:], 0.0)
-    return float(np.clip(np.mean(backward) / DX_TARGET, 0.0, 1.0))
+    return float(np.clip(np.mean(backward) / DX_TARGET, -1.0, 1.0))
 
 
 def too_high_penalty(feet):
