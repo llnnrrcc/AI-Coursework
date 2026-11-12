@@ -169,10 +169,51 @@ def fitness(chromosome):
             - W_CROWDING * crowding_penalty(feet))
 
 
+
+def hand_made_walk(coxa_timing, femur_centre=-0.375, tibia_centre=-1.45):
+    """
+    A hand-made gait for checking the fitness: every joint at full size, femur and tibia
+    half a step apart. Coxa timing +0.125 sweeps planted feet backwards (walks forwards),
+    -0.125 sweeps them forwards (walks backwards).
+    """
+    from chromosome import standing_chromosome, gene_index, CENTRE, SIZE, TIMING, N_LEGS
+    c = standing_chromosome().copy()
+    for leg in range(N_LEGS):
+        c[gene_index(leg, 0, SIZE)] = 1.0
+        c[gene_index(leg, 0, TIMING)] = coxa_timing
+        c[gene_index(leg, 1, CENTRE)] = femur_centre
+        c[gene_index(leg, 2, CENTRE)] = tibia_centre
+        c[gene_index(leg, 1, SIZE)] = 1.0
+        c[gene_index(leg, 2, SIZE)] = 1.0
+        c[gene_index(leg, 1, TIMING)] = 0.0
+        c[gene_index(leg, 2, TIMING)] = 0.5
+    return c
+
+
+def check_fitness(n_random=20, seed=0):
+    """
+    Checks the fitness puts gaits in the right order, so a later edit cannot quietly break it:
+    walking forwards > standing still > walking backwards, and random gaits below standing.
+    """
+    from chromosome import random_chromosome, standing_chromosome
+    standing = fitness(standing_chromosome())
+    forwards = fitness(hand_made_walk(0.125))
+    backwards = fitness(hand_made_walk(-0.125))
+    rng = np.random.default_rng(seed)
+    random_mean = np.mean([fitness(random_chromosome(rng)) for _ in range(n_random)])
+
+    assert abs(standing - 1.0) < 1e-9, f"standing should score 1.0, got {standing:.3f}"
+    assert forwards > standing, f"walking forwards ({forwards:.3f}) should beat standing ({standing:.3f})"
+    assert backwards < standing, f"walking backwards ({backwards:.3f}) should score below standing"
+    assert random_mean < standing, f"random gaits ({random_mean:.3f}) should score below standing"
+    print(f"Fitness checks passed: forwards {forwards:.3f} > standing {standing:.3f} > "
+          f"backwards {backwards:.3f}, random mean {random_mean:.3f}")
+
 if __name__ == "__main__":
     import time
     from chromosome import random_chromosome, standing_chromosome
 
+    check_fitness()
     start = time.time()
     standing = fitness(standing_chromosome())
     one_call = time.time() - start
