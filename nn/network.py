@@ -1,4 +1,5 @@
 import numpy as np
+import copy
 
 
 class Network:
@@ -47,13 +48,37 @@ class Network:
             self.biases[layer] -= learning_rate * bias_gradient
 
         return float(np.mean((outputs - targets) ** 2))
+    
+def loss(net, inputs, targets):
+    """Half the sum of squared errors: the quantity backpropagation computes the gradient of."""
+    outputs = net.forward(inputs)
+    return 0.5 * np.sum((outputs - np.asarray(targets, dtype=float)) ** 2)
+
+
+def gradient_check(net, inputs, targets, epsilon=1e-5):
+    """Compare backpropagation's gradients with gradients measured by nudging every weight and bias.
+    Returns the largest difference found."""
+    stepped = copy.deepcopy(net)
+    stepped.train_step(inputs, targets, learning_rate=1.0)
+    worst = 0.0
+    for layer in range(len(net.weights)):
+        pairs = [(net.weights[layer], net.weights[layer] - stepped.weights[layer]),
+                 (net.biases[layer], net.biases[layer] - stepped.biases[layer])]
+        for params, backprop in pairs:
+            for index in np.ndindex(params.shape):
+                original = params[index]
+                params[index] = original + epsilon
+                loss_up = loss(net, inputs, targets)
+                params[index] = original - epsilon
+                loss_down = loss(net, inputs, targets)
+                params[index] = original
+                measured = (loss_up - loss_down) / (2 * epsilon)
+                worst = max(worst, abs(measured - backprop[index]))
+    return worst
 
 
 if __name__ == "__main__":
     net = Network([2, 16, 24])
-    inputs = [0.0, 1.0]
-    targets = np.linspace(0.2, 0.8, 24)
-    print("error before:", round(net.train_step(inputs, targets, 0.5), 5))
-    for _ in range(1000):
-        error = net.train_step(inputs, targets, 0.5)
-    print("error after 1000 steps:", round(error, 5))
+    print("gradient check, 1 hidden layer:", gradient_check(net, [0.0, 1.0], np.linspace(0.2, 0.8, 24)))
+    net = Network([2, 16, 16, 24], seed=3)
+    print("gradient check, 2 hidden layers:", gradient_check(net, [0.3, -0.9], np.linspace(0.8, 0.1, 24)))
