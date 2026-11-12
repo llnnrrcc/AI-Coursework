@@ -5,9 +5,12 @@ fitness(chromosome) decodes the 36 genes into 300 frames of joint angles (gait.p
 finds where each foot is in each frame (spider_model.py), and adds up the score terms.
 
 Terms (all on a 0 to 1 scale):
-  support  - reward frames with at least 4 feet planted (inside the contact band)
-  lift     - reward feet that rise clear of the band during the step
-  below    - penalise feet that go below the band, more the deeper they go
+  support   - reward frames with at least 4 feet planted (inside the contact band)
+  lift      - reward feet that rise clear of the band during the step
+  forward   - reward planted feet that sweep backwards, which pushes the body forwards
+  below     - penalise feet that go below the band, more the deeper they go
+  too_high  - penalise feet that rise far above the body
+  crowding  - penalise neighbouring feet that get too close together
 Floor numbers come from DECISIONS.md section 2.
 """
 
@@ -48,14 +51,39 @@ LIFT_TARGET = 0.10
 # Four feet on the ground keeps the body supported (two fixed teams of four, section 3).
 MIN_PLANTED = 4
 
-# All three terms run from 0 to 1. Support and below-floor get equal weight. Lift gets
-# half, because with equal weights a gait with every foot in the air and nothing planted
-# scores as high as standing (random chromosomes averaged 0.90 against standing at 1.00),
-# so the GA could not tell flying legs from a working gait. At half weight random gaits
-# average 0.45 while sensible stepping gaits score 1.05 to 1.25, above standing at 1.00.
+# The body is fixed in this model, so forward motion is read from the feet. Front is +x
+# (the red marker in the plot). A planted foot that moves towards -x pushes the body
+# forwards. DX_TARGET is the backward sweep per sampled frame that the best hand-made
+# wave reached (full coxa swing, coxa timing +0.125), so that wave scores about 1.
+DX_TARGET = 0.05
+
+# A foot should not go far above the body (body is at z = 0). Nothing in the first
+# three terms stopped it: the lift reward is capped at 1, so a foot at z = 1.4 cost
+# nothing. The penalty starts just below body level and reaches 1 half a unit above it.
+HEIGHT_CAP = -0.05
+HEIGHT_SCALE = 0.5
+
+# Neighbouring feet closer than this (seen from above) are penalised. The model has no
+# leg thickness, so this is the closest L1 and L2 get in the group's starting gait
+# (DECISIONS.md section 3, about 0.5 to 0.56), which the teams are meant to allow. The
+# penalty only starts below it, so the planned gait is not punished for what the design
+# already accepts.
+MIN_FEET_GAP = 0.5
+NEIGHBOURS = [(i, (i + 1) % 8) for i in range(8)]   # each foot and the next one round the body
+
+# Weights. Every term runs from 0 to 1.
+# Support and below-floor get equal weight. Lift gets half, because with equal weights a
+# gait with every foot in the air and nothing planted scores as high as standing (random
+# chromosomes averaged 0.90 against standing at 1.00), so the GA could not tell flying
+# legs from a working gait. Forward gets full weight: without it standing still scored the
+# best possible 1.00 and the GA had no reason to walk. The two penalties added later
+# (too high, crowding) have full weight, since they rule out poses that look wrong.
 W_SUPPORT = 1.0
 W_LIFT = 0.5
+W_FORWARD = 1.0
 W_BELOW = 1.0
+W_TOO_HIGH = 1.0
+W_CROWDING = 1.0
 
 
 def below_floor_penalty(feet):
@@ -90,11 +118,50 @@ def lift_reward(feet):
     return float(np.mean(np.clip((highest - BAND_HIGH) / LIFT_TARGET, 0.0, 1.0)))
 
 
+def forward_reward(feet):
+    """
+    How far planted feet sweep backwards (towards -x) between sampled frames, averaged
+    over every foot and frame and divided by DX_TARGET, capped at 1. A foot counts as
+    planted in an interval if it is inside the contact band at both ends. A foot that
+    slides forwards while planted pushes the body backwards and cancels the reward.
+    Standing still scores 0, and so do random gaits on average.
+    """
+    z = feet[:, :, 2]
+    x = feet[:, :, 0]
+    planted = (z >= BAND_LOW) & (z <= BAND_HIGH)
+    both = planted[1:] & planted[:-1]
+    backward = np.where(both, x[:-1] - x[1:], 0.0)
+    return float(np.clip(np.mean(backward) / DX_TARGET, 0.0, 1.0))
+
+
+def too_high_penalty(feet):
+    """
+    How far each foot's highest point is above HEIGHT_CAP, as a fraction of HEIGHT_SCALE
+    (capped at 1), averaged over the eight feet. A foot at body level costs almost nothing.
+    """
+    highest = feet[:, :, 2].max(axis=0)
+    return float(np.mean(np.clip((highest - HEIGHT_CAP) / HEIGHT_SCALE, 0.0, 1.0)))
+
+
+def crowding_penalty(feet):
+    """
+    How far neighbouring feet (seen from above) come within MIN_FEET_GAP of each other,
+    as a fraction of MIN_FEET_GAP, averaged over the eight neighbouring pairs and every
+    frame. Feet at the same spot would score 1.
+    """
+    xy = feet[:, :, :2]
+    gaps = np.stack([np.linalg.norm(xy[:, a] - xy[:, b], axis=1) for a, b in NEIGHBOURS])
+    return float(np.mean(np.maximum(0.0, MIN_FEET_GAP - gaps) / MIN_FEET_GAP))
+
+
 def fitness(chromosome):
     feet = feet_positions(decode(chromosome))
     return (W_SUPPORT * support_reward(feet)
             + W_LIFT * lift_reward(feet)
-            - W_BELOW * below_floor_penalty(feet))
+            + W_FORWARD * forward_reward(feet)
+            - W_BELOW * below_floor_penalty(feet)
+            - W_TOO_HIGH * too_high_penalty(feet)
+            - W_CROWDING * crowding_penalty(feet))
 
 
 if __name__ == "__main__":
