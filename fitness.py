@@ -131,8 +131,9 @@ def lift_reward(feet):
 def forward_reward(feet):
     """
     How far planted feet sweep backwards (towards -x) between sampled frames, averaged
-    over every foot and frame and divided by DX_TARGET, capped at 1. A foot counts as
-    planted in an interval if it is below the top of the band at both ends. A foot that
+    over every frame and divided by DX_TARGET, then capped between -1 and 1 for each foot
+    separately before averaging over the feet, so one leg cannot do another leg's share
+    of the pushing. A foot counts as planted in an interval if it is below the top of the band at both ends. A foot that
     slides forwards while planted pushes the body backwards and cancels the reward.
     Standing still scores 0. Sliding the wrong way scores below 0, down to -1, so the GA
     can tell a slightly wrong gait from a very wrong one.
@@ -142,8 +143,8 @@ def forward_reward(feet):
     planted = z <= BAND_HIGH
     both = planted[1:] & planted[:-1]
     backward = np.where(both, x[:-1] - x[1:], 0.0)
-    return float(np.clip(np.mean(backward) / DX_TARGET, -1.0, 1.0))
-
+    per_foot = np.clip(backward.mean(axis=0) / DX_TARGET, -1.0, 1.0)   # each foot must push its own share
+    return float(np.mean(per_foot))
 
 def too_high_penalty(feet):
     """
