@@ -159,14 +159,20 @@ def crowding_penalty(feet):
     return float(np.mean(np.maximum(0.0, MIN_FEET_GAP - gaps) / MIN_FEET_GAP))
 
 
-def fitness(chromosome):
-    feet = feet_positions(decode(chromosome))
+def score_angles(angles):
+    """Score a gait given directly as angles (frames x 24), e.g. the neural network's output."""
+    feet = feet_positions(angles)
     return (W_SUPPORT * support_reward(feet)
             + W_LIFT * lift_reward(feet)
             + W_FORWARD * forward_reward(feet)
             - W_BELOW * below_floor_penalty(feet)
             - W_TOO_HIGH * too_high_penalty(feet)
             - W_CROWDING * crowding_penalty(feet))
+
+
+def fitness(chromosome):
+    """Score a chromosome: decode it into 300 frames of angles, then score those."""
+    return score_angles(decode(chromosome))
 
 
 
