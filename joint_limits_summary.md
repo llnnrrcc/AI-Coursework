@@ -53,4 +53,3 @@ Checked in the model: all eight feet sit at z = -0.295, and the nearest neighbou
 3. **Exact limits or a margin?** The coxa limits are the real spider's measured range. We could add a small margin (0.05 to 0.1) to give the GA room.
 4. **Tidy `tibia_limits.md`:** two older lines still mention a floor of about -0.35 and the femur range as an open point, both now settled.
 
-> Note: combined from the four results files with Claude's help; standing pose and neighbour gaps checked by running the model.

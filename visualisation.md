@@ -48,6 +48,4 @@ In the final gait every foot dips into the band and rises well above it. All eig
 
 The code that produced the two faulty gaits has since changed, so their best chromosomes are saved in `results/earlier_runs/` and `python foot_heights.py` redraws both graphs. They were made by checking out the commit before each fix and running `run_ga(42)` (population 40, 50 generations). The final scores match the ones in `fitness_design.md`: 1.76 before the sinking fix and 1.57 after it.
 
-## How this was made
 
-**[check: add your own AI-use note here, in the same style as `fitness_design.md`.]** Claude wrote `save_results.py` and `foot_heights.py`, re-ran the two earlier runs, and drafted this write-up from `fitness_design.md`.

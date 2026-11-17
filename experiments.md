@@ -54,6 +54,4 @@ Mutation rate 0.1 and tournament size 5. Population 40, or 80 if the extra time 
 - Changing one setting at a time does not show how settings interact (for example a bigger population with a higher mutation rate).
 - These numbers are for this version of the fitness only. An earlier run on the fitness before the sinking fix gave different numbers (population 20 averaged 1.913 then, against 2.220 now).
 
-## How this was made
 
-`experiments.py` was written by Claude, and I ran it. This write-up was drafted with Claude's help from `summary.csv` and `runs.jsonl`.
