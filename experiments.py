@@ -39,9 +39,11 @@ import numpy as np
 import ga
 import operators
 
-DEFAULTS = {"POPULATION_SIZE": ga.POPULATION_SIZE,
-            "MUTATION_RATE": ga.MUTATION_RATE,
-            "TOURNAMENT_SIZE": ga.TOURNAMENT_SIZE}
+# The defaults the experiment was run with (experiments.md). Fixed here, because ga.py's own
+# settings later changed to the final ones (population 80), which would change the experiment.
+DEFAULTS = {"POPULATION_SIZE": 40,
+            "MUTATION_RATE": 0.1,
+            "TOURNAMENT_SIZE": 3}
 
 VALUES = {"POPULATION_SIZE": [20, 40, 80],
           "MUTATION_RATE": [0.05, 0.1, 0.2],

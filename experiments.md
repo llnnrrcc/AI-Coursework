@@ -2,7 +2,7 @@
 
 ## What I tested
 
-I changed one GA setting at a time and kept the other two at their defaults in `ga.py` (population 40, mutation rate 0.1, tournament size 3, elitism 2, 50 generations):
+I changed one GA setting at a time and kept the other two at the defaults `ga.py` had at the time (population 40, mutation rate 0.1, tournament size 3, elitism 2, 50 generations):
 
 - population size: 20, 40, 80
 - mutation rate: 0.05, 0.1, 0.2
@@ -12,7 +12,7 @@ Each setting was run with seeds 1, 2 and 3, so one lucky run does not decide any
 
 The fitness is the version after the lift and forward fixes (commit e239a78). The most it can give is 2.5 (support 1, forward 1, lift 0.5).
 
-To repeat this: `python experiments.py --out experiment_results_v3`. The results and graphs stay out of git (`.gitignore`), so the numbers are copied here.
+To repeat this: `python experiments.py --out experiment_results_v3`. The summary table and the three graphs from this run are in `results/experiments/`.
 
 ## Results
 
