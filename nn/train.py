@@ -15,7 +15,7 @@ from nn.network import Network
 from nn.data import make_dataset, unscale
 from gait import decode
 
-LEARNING_RATE = 0.5
+LEARNING_RATE = 2.0
 EPOCHS = 2000
 
 
