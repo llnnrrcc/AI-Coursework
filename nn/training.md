@@ -45,7 +45,7 @@ With learning rate 2.0 the final error is 0.000004. Turned back into angles over
 
 ## Limits
 
-- The learning-rate comparison uses one seed (0). The ordering of the rates is large enough that it should hold, but the exact numbers would change with another seed.
+- The full four-rate comparison uses one seed (0). To check 2.0 against 0.5 was not luck, both were also trained with seeds 1 and 2. 2.0 ended lower every time: 0.0000041, 0.0000039 and 0.0000056 against 0.0000099, 0.0000106 and 0.0000097 for 0.5 (seeds 0, 1 and 2).
 - There is no separate test set. The gait repeats every 60 frames, so all 300 examples are the same 60 moments, and the network is only tested on moments it trained on. A fairer check would be phases between the frames it saw.
 - The error was still falling slowly at epoch 2000, so more epochs would lower it a little more.
 
