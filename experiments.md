@@ -10,7 +10,7 @@ I changed one GA setting at a time and kept the other two at the defaults `ga.py
 
 Each setting was run with seeds 1, 2 and 3, so one lucky run does not decide anything. The default settings appear in all three groups but were run once, so the full set is 21 runs. Every run is seeded, so the same seed always gives the same run.
 
-The fitness is the version after the lift and forward fixes (commit e239a78). The most it can give is 2.5 (support 1, forward 1, lift 0.5).
+The fitness is the version after the lift and forward fixes (commit e239a78), before the energy term was added. Scores here are therefore on the old scale, where 2.5 was reachable. The final gait in `fitness_design.md` uses the later fitness, so its 2.354 is not comparable with these numbers. The most it can give is 2.5 (support 1, forward 1, lift 0.5).
 
 To repeat this: `python experiments.py --out experiment_results_v3`. The summary table and the three graphs from this run are in `results/experiments/`.
 
