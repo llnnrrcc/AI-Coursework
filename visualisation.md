@@ -42,7 +42,7 @@ The same graph also shows L4 shuffling inside the band without lifting clear of 
 
 ![Foot heights of the final gait](results/foot_heights.png)
 
-In the final gait every foot dips into the band and rises well above it. The lowest any foot goes is -0.351, right at the bottom of the band, instead of a whole return stroke below it. That is the pattern the two faulty runs did not have. The fitness graph, GIF and still poses of this gait are in `results/` (made by `save_results.py`).
+In the final gait every foot dips into the band and rises well above it. All eight feet lift to between -0.149 and -0.138, and none goes below the band (the lowest is -0.348). That is the pattern the two faulty runs did not have. The fitness graph, GIF and still poses of this gait are in `results/` (made by `save_results.py`).
 
 ## Reproducing the earlier runs
 

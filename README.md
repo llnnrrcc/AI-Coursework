@@ -89,11 +89,11 @@ changing anything they cover.
 
 | Command | What it does | Output |
 | --- | --- | --- |
-| `python ga.py` | Runs the GA with the settings at the top of `ga.py` (population 80, 50 generations, seed 1), printing the best and average fitness each generation. About 3 minutes. | Saves `best_chromosome.npy`, then opens the fitness graph. |
+| `python ga.py` | Runs the GA with the settings at the top of `ga.py` (population 80, 100 generations, seed 1), printing the best and average fitness each generation. About 6 to 10 minutes. | Saves `best_chromosome.npy`, then opens the fitness graph. |
 | `python show_best.py` | Animates the gait in `best_chromosome.npy`, so run `ga.py` first. | 3D animation window. |
 | `python experiments.py` | Compares population size, mutation rate and tournament size, three seeds each (about an hour). For a quick test: `python experiments.py --generations 5 --seeds 1 --out test_run`. | A graph per setting and `summary.csv` in `experiment_results/`. The ones in the report are in `results/experiments/`. |
 | `python foot_heights.py` | Redraws the foot height graphs of the two earlier faulty runs (sinking and hovering legs) used in `visualisation.md`. | `results/earlier_runs/foot_heights_*.png`. |
-| `python save_results.py` | Saves the visuals of the final gait (`final_best_chromosome.npy`) for the report. The first run re-runs the GA to get its fitness history (about 3 minutes); after that it takes seconds. | `results/`: fitness graph and its CSV, a looping GIF of one step, side and top still poses, and a foot height graph. |
+| `python save_results.py` | Saves the visuals of the final gait (`final_best_chromosome.npy`) for the report. The first run re-runs the GA to get its fitness history (about 6 to 10 minutes); after that it takes seconds. | `results/`: fitness graph and its CSV, a looping GIF of one step, side and top still poses, and a foot height graph. |
 
 `final_best_chromosome.npy` is the gait from the final run, used in the report
 and by the neural network. Running `ga.py` writes `best_chromosome.npy`
