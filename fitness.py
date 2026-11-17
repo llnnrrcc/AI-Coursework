@@ -11,12 +11,14 @@ Terms (all on a 0 to 1 scale):
   below     - penalise feet that go below the band, more the deeper they go
   too_high  - penalise feet that rise far above the body
   crowding  - penalise neighbouring feet that get too close together
+  energy    - penalise joint movement, a stand-in for energy used
 Floor numbers come from DECISIONS.md section 2.
 """
 
 import numpy as np
 
 from gait import decode
+from chromosome import joint_limits
 from spider_model import spider_joints
 
 FLOOR = -0.30
@@ -84,6 +86,10 @@ W_FORWARD = 1.0
 W_BELOW = 1.0
 W_TOO_HIGH = 1.0
 W_CROWDING = 1.0
+# Energy can take off at most W_ENERGY, and a perfect walk scores 2.5 before it, so any
+# weight below 1.5 keeps every perfect walk above standing still (1.0). 0.5 leaves a wide
+# margin and still cut the final gait's joint movement by about a third.
+W_ENERGY = 0.5
 
 
 def below_floor_penalty(feet):
@@ -159,6 +165,24 @@ def crowding_penalty(feet):
     return float(np.mean(np.maximum(0.0, MIN_FEET_GAP - gaps) / MIN_FEET_GAP))
 
 
+# Width of each of the 24 joints' range, in decode() order (L1-L4, then R4-R1). A right leg
+# has the same range width as its left partner (leg 7 - k).
+JOINT_RANGES = np.array([np.diff(joint_limits(leg if leg < 4 else 7 - leg, joint))[0]
+                         for leg in range(8) for joint in range(3)])
+FRAMES_PER_STEP = 60
+
+
+def energy_penalty(angles):
+    """
+    How much the joints move, from 0 (standing still) to 1 (every joint swinging through
+    its whole range and back in every step). Total angle travelled per step, divided by
+    twice the joint's range, averaged over the 24 joints. A stand-in for energy: the
+    model has no masses or motors, so less movement for the same walk counts as cheaper.
+    """
+    moved_per_step = np.abs(np.diff(angles, axis=0)).mean(axis=0) * FRAMES_PER_STEP
+    return float(np.mean(np.clip(moved_per_step / (2 * JOINT_RANGES), 0.0, 1.0)))
+
+
 def score_angles(angles):
     """Score a gait given directly as angles (frames x 24), e.g. the neural network's output."""
     feet = feet_positions(angles)
@@ -167,7 +191,8 @@ def score_angles(angles):
             + W_FORWARD * forward_reward(feet)
             - W_BELOW * below_floor_penalty(feet)
             - W_TOO_HIGH * too_high_penalty(feet)
-            - W_CROWDING * crowding_penalty(feet))
+            - W_CROWDING * crowding_penalty(feet)
+            - W_ENERGY * energy_penalty(angles))
 
 
 def fitness(chromosome):
