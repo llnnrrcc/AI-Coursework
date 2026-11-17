@@ -40,9 +40,9 @@ if __name__ == "__main__":
     # One joint over one step: training frames as dots, unseen frames as crosses
     frames = np.arange(60)
     plt.figure()
-    plt.plot(frames, angles[:60, 0], "k-", label="real (L1 coxa)")
-    plt.plot(frames[::2], predicted[:60:2, 0], "o", label="predicted, seen frames")
-    plt.plot(frames[1::2], predicted[1:60:2, 0], "x", label="predicted, unseen frames")
+    plt.plot(frames, angles[:60, 3], "k-", label="real (L2 coxa)")
+    plt.plot(frames[::2], predicted[:60:2, 3], "o", label="predicted, seen frames")
+    plt.plot(frames[1::2], predicted[1:60:2, 3], "x", label="predicted, unseen frames")
     plt.xlabel("Frame")
     plt.ylabel("Angle (rad)")
     plt.title("Held-out test: trained on even frames, tested on odd")
