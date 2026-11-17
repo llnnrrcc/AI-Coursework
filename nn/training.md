@@ -46,6 +46,6 @@ With learning rate 2.0 the final error is 0.0000011. Turned back into angles ove
 ## Limits
 
 - The full four-rate comparison uses one seed (0). To check 2.0 against 0.5 was not luck, both were also trained with seeds 1 and 2. 2.0 ended lower every time: 0.0000011, 0.0000012 and 0.0000010 against 0.0000031, 0.0000050 and 0.0000043 for 0.5 (seeds 0, 1 and 2).
-- There is no separate test set. The gait repeats every 60 frames, so all 300 examples are the same 60 moments, and the network is only tested on moments it trained on. A fairer check would be phases between the frames it saw.
+- The gait repeats every 60 frames, so all 300 examples are only 60 different moments. To check the network learned the movement rather than memorising those moments, Lauren's held-out test (`nn/held_out_test.py`) trains a fresh network on the even frames only and tests it on the odd frames, which it never sees (the 60-frame repeat keeps every odd frame unseen). The error on the unseen frames (0.0000015) is the same as on the training frames (0.0000015), and the worst unseen angle is 0.011 rad (0.61 degrees) off. Its full 300-frame gait scores 2.354 on the GA's fitness, the same as the GA's own final gait.
 - The error was still falling slowly at epoch 2000, so more epochs would lower it a little more.
 
