@@ -19,9 +19,10 @@ LEARNING_RATE = 2.0
 EPOCHS = 2000
 
 
-def train(inputs, targets, learning_rate=LEARNING_RATE, epochs=EPOCHS, seed=0, verbose=True):
-    """Train a fresh [2, 16, 24] network. Returns the network and the mean error of each epoch."""
-    net = Network([2, 16, 24], seed=seed)
+def train(inputs, targets, learning_rate=LEARNING_RATE, epochs=EPOCHS, seed=0, verbose=True,
+          layer_sizes=(2, 16, 24)):
+    """Train a fresh network (default [2, 16, 24]). Returns the network and the mean error of each epoch."""
+    net = Network(list(layer_sizes), seed=seed)
     rng = np.random.default_rng(seed)
     errors = []
     for epoch in range(epochs):
