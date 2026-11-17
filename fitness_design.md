@@ -1,6 +1,6 @@
 # Fitness function (A2)
 
-Status: draft. It covers the six terms now in `fitness.py`. Weights and thresholds are open to change once the group has run the GA a few more times.
+Status: final. It covers the six terms in `fitness.py`, used for the final GA run.
 
 ## What it does
 
@@ -51,6 +51,12 @@ A lower score after a fix does not mean a worse gait: each fix took away points 
 
 With the current fitness and 100 generations, the best reached 2.20 (average 2.11) and was still improving at generation 97. That best chromosome scored support 1.00, lift 0.92, forward 0.74 and no penalties. The experiments (`experiments.md`) also found most runs still improving at generation 50, so more generations helps.
 
+### Final run
+
+Final settings, chosen from the experiments (`experiments.md`): population 80, mutation rate 0.1, tournament size 3, 50 generations, seed 1. Population 80 was the only setting that reached the maximum on every seed. Seed 42 was a poor start (2.13 with population 80), while seeds 1 and 2 both reached 2.5, so the final run uses seed 1.
+
+The best reached the maximum score of 2.5 by about generation 32 and held it, with the average about 2.44 at generation 50. The final chromosome (`final_best_chromosome.npy`) scores support 1, lift 1, forward 1 and 0 on every penalty. Every foot lifts 0.10 to 0.18 above the band, the back legs included, and no foot goes below -0.35.
+
 ## Why only every 5th frame is scored
 
 One step is 60 frames, so every 5th frame gives 12 samples per step. One call takes about 0.04 to 0.08 s that way, against 0.38 s for all 300 frames. The GA calls it thousands of times: 2,000 calls (40 chromosomes, 50 generations) is about 2 minutes.
@@ -67,9 +73,9 @@ One step is 60 frames, so every 5th frame gives 12 samples per step. One call ta
 
 ## Known limits
 
-- Forward stops at 1, so the GA gets no extra reward for walking faster than 0.05 per sampled frame.
+- Forward and lift both stop at 1, so the most the fitness can give is 2.5. The final run reaches it by generation 32, after which the GA cannot tell that gait apart from a better one, which is why the best line goes flat. A higher cap or a speed reward would be needed to keep improving.
 - Support cannot tell a planted foot from a foot that is only passing below the top of the band on its way up or down.
-- The back legs (L4, R4) shuffle rather than lift. In the seeded 50-generation run their highest point stays 0.06 below the top of the band, so they never leave the floor. After 100 generations they lift 0.07, still less than the other legs (0.10 to 0.12).
+- In the earlier population-40 runs the back legs (L4, R4) shuffled rather than lifted: in the seeded 50-generation run their highest point stayed 0.06 below the top of the band. In the final run (population 80) they lift 0.12, so this applies to the weaker runs only.
 - The score does not look at the body or at balance, only at the feet. A gait can score well and still look odd, so `show_best.py` is the real check.
 
 ## How this was made
