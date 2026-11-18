@@ -1,7 +1,5 @@
 # Visualisation: catching faults the fitness score hid
 
-Status: draft. Check the points marked **[check]** before this goes in the report.
-
 ## Why the score alone was not enough
 
 The fitness graph shows whether the GA is improving, but not *how* it is getting its points. Twice the best fitness rose steadily while the gait was getting its points from a gap in the fitness function rather than from walking. The fitness graph looked healthy both times. The faults only showed up when we looked at what the feet were actually doing.
@@ -42,10 +40,8 @@ The same graph also shows L4 shuffling inside the band without lifting clear of 
 
 ![Foot heights of the final gait](results/foot_heights.png)
 
-In the final gait every foot dips into the band and rises well above it. All eight feet lift to between -0.149 and -0.138, and none goes below the band (the lowest is -0.348). That is the pattern the two faulty runs did not have. The fitness graph, GIF and still poses of this gait are in `results/` (made by `save_results.py`).
+In the final gait every foot dips into the band and rises well above it. Their highest points range from -0.141 (L3) to -0.052 (L2), at least 0.11 above the top of the band. The lowest any foot goes is -0.353 (L3), only 0.003 below the band and for 6 frames in each 60-frame step, rather than a whole return stroke under the floor. That is the pattern the two faulty runs did not have. The fitness graph, GIF and still poses of this gait are in `results/` (made by `save_results.py`).
 
 ## Reproducing the earlier runs
 
 The code that produced the two faulty gaits has since changed, so their best chromosomes are saved in `results/earlier_runs/` and `python foot_heights.py` redraws both graphs. They were made by checking out the commit before each fix and running `run_ga(42)` (population 40, 50 generations). The final scores match the ones in `fitness_design.md`: 1.76 before the sinking fix and 1.57 after it.
-
-

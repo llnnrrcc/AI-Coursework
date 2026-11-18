@@ -93,7 +93,36 @@ Whole-leg crossover preserves coordinated leg movements, but two fixed parents c
 
 **Elitism (2):** the two best chromosomes in each generation are copied unchanged into the next one, so the best solution found so far can never be lost to crossover or mutation. In the first test run, the best fitness never dropped from one generation to the next.
 
-**Starting settings:** population 40, 50 generations, mutation rate 0.1, tournament size 3, elitism 2. With fitness taking about 0.06 seconds per call, a run takes about 2 minutes. All settings are constants at the top of `ga.py`, so experiments only change one number. Each run uses a seeded random generator, so the same seed gives the same starting population.
+### The GA loop
+
+`run_ga()` in `ga.py` puts the pieces above together.
+
+**Initialisation.** The first generation is 80 random chromosomes. Every gene is drawn evenly from its own range (`random_chromosome()` in `chromosome.py`), so every starting chromosome is already a valid gait inside the joint limits, and the whole range of each gene gets covered. We did not start from the standing pose or a hand-made walk: a population of copies would have no variety for crossover to work with, and it would push the GA towards our guess instead of letting it find its own gait.
+
+**Each generation:**
+
+1. Score every chromosome with `fitness()`.
+2. Record the best and average score, for the fitness graph.
+3. Copy the 2 best chromosomes straight into the next generation (elitism).
+4. Fill the remaining 78 places by picking two parents by tournament, crossing them over by whole legs, and mutating both children.
+
+After the last generation the final population is scored once more, and its best chromosome is saved to `best_chromosome.npy`. The final run's best is kept separately as `final_best_chromosome.npy`, so later test runs cannot overwrite it.
+
+**Stopping after 100 generations.** The GA runs a fixed number of generations instead of stopping when the score stops improving. This makes every run take the same time and do the same amount of search, so runs with different settings can be compared fairly (`experiments.md`). We started with 50 generations, but the experiments found most runs still improving at generation 41 to 50. Once the energy term was added, the best was still improving at generation 50, so the final run uses 100. In the final run the best was still rising slowly at the end: 2.023 at generation 50, 2.149 at 75 and 2.227 at 100. Most of the rise came early (1.604 by generation 10), and the gains after that were small. The final gait already scores full support (1) and lift (1). The room left is in forward (0.917) and the energy penalty (0.378), so a longer run would probably add a little more by pushing more evenly or moving less. We judged 100 generations a fair trade between time and score. Elitism means the best score never drops, so stopping at any generation keeps the best gait found so far.
+
+**Tunable settings.** All settings are constants at the top of `ga.py`, so an experiment only changes one number:
+
+| Setting | Start | Final | Why the final value |
+| --- | --- | --- | --- |
+| `POPULATION_SIZE` | 40 | 80 | Only setting that reached the maximum on all three seeds in the experiments (`experiments.md`). It takes about twice as long. |
+| `GENERATIONS` | 50 | 100 | Runs were still improving at 50 (see above). |
+| `MUTATION_RATE` | 0.1 | 0.1 | Best and most consistent of 0.05, 0.1 and 0.2. |
+| `TOURNAMENT_SIZE` | 3 | 3 | 5 did slightly better (2.480 against 2.464), but the difference was smaller than the spread between seeds, so the default was kept. |
+| `ELITE_COUNT` | 2 | 2 | Not tested. 2 keeps the best gait without filling the population with copies. |
+
+The final run makes about 8,000 fitness calls (80 chromosomes, 101 scorings), which takes about 9 minutes.
+
+**The seed.** `run_ga(seed)` makes one seeded random generator and passes it to initialisation, selection, crossover and mutation. So the same seed always gives exactly the same run, which means a result can be checked by running it again, and a fix to the fitness can be tested on the same starting population as before. In the experiments each setting was run with seeds 1, 2 and 3, so one lucky start does not decide a setting. For the final run we picked seed 1, because seed 42 was a poor start (2.13 with population 80 on the old fitness), while seeds 1 and 2 both reached the maximum. Choosing the seed after seeing results is a form of picking the best run, so the experiments, not the final run, are the evidence for the settings.
 
 ## 4. Rejected options
 
