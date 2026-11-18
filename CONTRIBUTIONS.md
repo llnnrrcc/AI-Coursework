@@ -61,7 +61,7 @@
 | Member | Student number | Contribution (%) |
 | --- | --- | --- |
 | Sujan | 2270752 | 25% |
-| Jake | | 25% |
+| Jake | 2274964 | 25% |
 | Lauren | | 25% |
 | Maria | 2305949 | 25% |
 
