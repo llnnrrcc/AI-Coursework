@@ -6,21 +6,21 @@
 | Task | Sujan | Jake | Lauren | Maria |
 | --- | :---: | :---: | :---: | :---: |
 | **Part 1: model and limits** | | | | |
-| Repo and environment setup, `requirements.txt` | | ✓ | ✓ | |
+| Repo and environment setup, `requirements.txt` | | ✓ | ✓ | ✓ |
 | Forward kinematics (`kinematics.py`) | | ✓ | | |
-| Spider model and plotting (`spider_model.py`) | ✓ | ✓ | ✓ | |
+| Spider model and plotting (`spider_model.py`) | ✓ | ✓ | ✓ | ✓ |
 | Coxa limits (`coxa_limits.md`) | | | ✓ | |
-| Coxa symmetry (`coxa_symmetry.md`) | | | | |
+| Coxa symmetry (`coxa_symmetry.md`) | | | | ✓ |
 | Femur limits (`femur_limits.md`) | | ✓ | | |
 | Tibia limits (`tibia_limits.md`) | ✓ | | | |
 | Floor height and standing pose | ✓ | ✓ | | |
 | Combined joint limits (`joint_limits_summary.md`) | | | ✓ | |
 | **Part 1: chromosome and GA** | | | | |
-| Chromosome design (wave encoding, `DECISIONS.md` section 3) | ✓ | ✓ | | |
+| Chromosome design (wave encoding, `DECISIONS.md` section 3) | ✓ | ✓ | | ✓ |
 | Chromosome layout and decoding (`chromosome.py`, `gait.py`) | | ✓ | | |
 | Genetic operators and their tests (`operators.py`, `test_operators.py`) | | | | |
 | GA loop, selection and elitism (`ga.py`) | | | ✓ | |
-| Repeatable seeded runs | | | ✓ | |
+| Repeatable seeded runs | | | ✓ | ✓ |
 | **Part 1: fitness** | | | | |
 | Support, lift and below-floor terms | ✓ | | | |
 | Forward, too-high and crowding terms | ✓ | | | |
@@ -47,8 +47,11 @@
 | Network gait animation (`nn/show_nn_gait.py`) | | | ✓ | |
 | Training write-up (`nn/training.md`) | ✓ | | | |
 | Reflection (`nn/reflection.md`) | ✓ | | | |
+| PyTorch comparison implementation (`nn/pytorch_compare.py`) | | | | ✓ |
+| PyTorch experiments and comparison graph (`nn/pytorch_comparison.png`) | | | | ✓ |
+| PyTorch comparison write-up (`nn/pytorch_comparison.md`) | | | | ✓ |
 | **Documentation and coordination** | | | | |
-| Design decisions (`DECISIONS.md`) | ✓ | ✓ | ✓ | |
+| Design decisions (`DECISIONS.md`) | ✓ | ✓ | ✓ | ✓ |
 | README and how to run the code | ✓ | ✓ | | |
 | Contribution sheet and AI-use statement | ✓ | | | |
 | Planning, meetings and task lists | ✓ | ✓ | ✓ | ✓ |
@@ -60,7 +63,7 @@
 | Sujan | 2270752 | 25% |
 | Jake | | 25% |
 | Lauren | | 25% |
-| Maria | | 25% |
+| Maria | 2305949 | 25% |
 
 Agreed by: Sujan [ ✓ ], Jake [ ✓ ], Lauren [ ✓ ], Maria [ ✓ ]
 
