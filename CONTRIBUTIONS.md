@@ -52,12 +52,12 @@
 
 ## Agreed split
 
-| Member | Contribution (%) |
-| --- | --- |
-| Sujan |25% |
-| Jake |25% |
-| Lauren |25% |
-| Maria |25% |
+| Member | Student number | Contribution (%) |
+| --- | --- | --- |
+| Sujan | 2270752 | 25% |
+| Jake | | 25% |
+| Lauren | | 25% |
+| Maria | | 25% |
 
 Agreed by: Sujan [ ✓ ], Jake [ ✓ ], Lauren [ ✓ ], Maria [ ✓ ]
 
