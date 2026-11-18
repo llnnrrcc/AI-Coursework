@@ -2,7 +2,7 @@
 
 ## What the network learns
 
-The network learns to reproduce the GA's final walking gait (`final_best_chromosome.npy`: population 80, seed 1, 100 generations, fitness 2.354 with the energy term). An earlier version of this write-up used the GA's previous final gait, from before the energy term; all numbers below are for the current one. Given where the spider is in its step, it outputs all 24 joint angles for that moment.
+The network learns to reproduce the GA's final walking gait (`final_best_chromosome.npy`: population 80, seed 1, 100 generations, fitness 2.227 with the energy term and per-leg forward scoring). Earlier versions of this write-up used the GA's previous final gaits; all numbers below are for the current one. Given where the spider is in its step, it outputs all 24 joint angles for that moment.
 
 ## Training data
 
@@ -28,24 +28,26 @@ I trained with four rates, keeping everything else the same (same seed, so the s
 
 | Learning rate | Error after epoch 100 | Error after epoch 2000 |
 | --- | --- | --- |
-| 0.1 | 0.000214 | 0.000019 |
-| 0.5 | 0.000088 | 0.0000031 |
-| 2.0 | 0.000014 | 0.0000011 |
-| 30.0 | 0.010492 | 0.012436 |
+| 0.1 | 0.000263 | 0.0000264 |
+| 0.5 | 0.000075 | 0.0000083 |
+| 2.0 | 0.000027 | 0.0000039 |
+| 30.0 | 0.018233 | 0.014359 |
 
-- 0.1 is too low. It learns, but slowly: after the first drop it sits on a shelf between 0.0002 and 0.0001 until about epoch 500.
-- 0.5 and 2.0 both fall smoothly. 2.0 is fastest (below 0.00001 by about epoch 150) and ends lowest, with an error about 2.8 times lower than 0.5.
-- 30.0 is too high. The error jumps around from epoch to epoch and stays around 0.01, so the network does not learn the gait at all. In a shorter test on the earlier gait, 10.0 still learned but its error kept jumping back up.
+- 0.1 is too low. It learns, but slowly, and ends about 7 times higher than 2.0.
+- 0.5 and 2.0 both fall smoothly. 2.0 is fastest and ends lowest, with an error about 2.1 times lower than 0.5.
+- 30.0 is too high. The error jumps around from epoch to epoch and ends at 0.014, about 3,700 times worse than 2.0, so the network does not learn the gait at all. In a shorter test on an earlier gait, 10.0 still learned but its error kept jumping back up.
 
 I chose 2.0. It gave the lowest error and the fastest training with no instability, and trouble only started around 10, so it leaves a wide margin below the point where training breaks.
 
 ## Result
 
-With learning rate 2.0 the final error is 0.0000011. Turned back into angles over all 24 joints and 300 frames, the predictions are 0.0006 rad off on average, and 0.0085 rad (0.48 degrees) at worst. The worst joint is the R3 tibia. The predicted-against-real graph shows L1's coxa, femur and tibia over one step, where the predictions sit on top of the real angles. In this gait L1's coxa barely moves (0.024 rad in total), so the graph mainly shows the femur and tibia.
+With learning rate 2.0 the final error is 0.0000039. Turned back into angles over all 24 joints and 300 frames, the predictions are 0.0010 rad off on average, and 0.017 rad (0.99 degrees) at worst. The worst joint is the L4 tibia. The predicted-against-real graph shows L1's coxa, femur and tibia over one step, where the predictions sit on top of the real angles.
+
+Scored with the GA's fitness, the network's gait gets 2.167 against the GA's 2.227. Everything matches except forward (0.856 against 0.917). Forward only counts a foot as pushing while it is at or below the top of the contact band, so an angle error of under a degree can tip a foot just above that line for a frame and lose that frame's push. It is a small loss, but it shows the fitness is stricter than the error numbers suggest.
 
 ## Limits
 
-- The full four-rate comparison uses one seed (0). To check 2.0 against 0.5 was not luck, both were also trained with seeds 1 and 2. 2.0 ended lower every time: 0.0000011, 0.0000012 and 0.0000010 against 0.0000031, 0.0000050 and 0.0000043 for 0.5 (seeds 0, 1 and 2).
-- The gait repeats every 60 frames, so all 300 examples are only 60 different moments. To check the network learned the movement rather than memorising those moments, Lauren's held-out test (`nn/held_out_test.py`) trains a fresh network on the even frames only and tests it on the odd frames, which it never sees (the 60-frame repeat keeps every odd frame unseen). The error on the unseen frames (0.0000015) is the same as on the training frames (0.0000015), and the worst unseen angle is 0.011 rad (0.61 degrees) off. Its full 300-frame gait scores 2.354 on the GA's fitness, the same as the GA's own final gait.
+- The full four-rate comparison uses one seed (0). To check 2.0 against 0.5 was not luck, both were also trained with seeds 1 and 2. 2.0 ended lower every time: 0.0000039, 0.0000037 and 0.0000023 against 0.0000083, 0.0000115 and 0.0000085 for 0.5 (seeds 0, 1 and 2).
+- The gait repeats every 60 frames, so all 300 examples are only 60 different moments. To check the network learned the movement rather than memorising those moments, Lauren's held-out test (`nn/held_out_test.py`) trains a fresh network on the even frames only and tests it on the odd frames, which it never sees (the 60-frame repeat keeps every odd frame unseen). The error on the unseen frames (0.0000055) is the same as on the training frames (0.0000055), and the worst unseen angle is 0.023 rad (1.3 degrees) off. Its full 300-frame gait scores 2.167 on the GA's fitness, the same as the network trained on every frame.
 - The error was still falling slowly at epoch 2000, so more epochs would lower it a little more.
 
