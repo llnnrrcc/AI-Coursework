@@ -1,8 +1,5 @@
 # Contribution sheet
 
-Draft for everyone to check. The brief asks for an agreed contribution sheet, so nothing here is final until all four of us have filled it in and agreed the split.
-
-Put a ✓ under your name for every task you did a real share of. More than one person can tick the same task. If something you did isn't listed, add a row.
 
 ## Who did what
 
