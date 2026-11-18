@@ -136,7 +136,7 @@ are only experimenting, don't commit those files.
 | `DECISIONS.md` | Design decisions and rejected options. |
 | `visualisation.md` | How the visuals were used to catch faults in the gait. |
 | `fitness_design.md`, `experiments.md`, `nn/training.md` | Write-ups for each part. |
-| `*_limits.md`, `coxa_symmetry.md` | Joint limit testing. |
+| `joint_limits`| Joint limit testing. |
 | `requirements.txt` | Python dependencies. |
 
 ## Git workflow

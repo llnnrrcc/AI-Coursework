@@ -1,53 +1,68 @@
 # Contribution sheet
 
-Draft for everyone to check. The brief asks for an agreed contribution sheet, so nothing here is final until all four of us have read our own row, corrected it, and agreed the split.
-
-I built the first version from the git history (who added or changed each file) and from what we agreed in meetings. Commit counts aren't a fair measure on their own, because some commits are one-line fixes or line-ending changes and some are whole components, so the rows below list what each person built rather than how often they committed.
 
 ## Who did what
 
-### Sujan (Pair A)
-
-- Part 1 joint limits: tibia limits (`tibia_limits.md`), and the floor height and standing pose with Jake.
-- Chromosome design: the wave encoding section of `DECISIONS.md` (36 genes, 5 cycles in 300 frames, the floor test).
-- Fitness function (`fitness.py`, `fitness_design.md`): the support, lift and below-floor terms, the weights and their reasons, `check_fitness()`, adding the energy term, and the final 100-generation GA run.
-- GA experiments: `experiments.py` (population, mutation rate and tournament size over three seeds, run in parallel) and the write-up in `experiments.md`.
-- Part 2, covering Maria's training tasks: `nn/train.py`, `nn/learning_rates.py`, the learning-rate choice, `nn/training.md` and `nn/reflection.md`.
-
-### Jake (Pair A)
-
-- Part 1 joint limits: femur limits (`femur_limits.md`).
-- Forward kinematics (`kinematics.py`).
-- Chromosome layout and decoding: `chromosome.py` and `decode()` in `gait.py`.
-- Results and visualisation: `save_results.py`, `foot_heights.py`, `visualisation.md` and the saved earlier runs in `results/earlier_runs/`.
-- `README.md` and `requirements.txt`.
-
-### Lauren (Pair B)
-
-- Part 1 joint limits: coxa limits (`coxa_limits.md`).
-- The GA itself (`ga.py`): initial population, tournament selection, elitism, the main loop, seeded runs and the final settings.
-- Fitness fixes: the sinking fix, the per-leg forward fix (lazy back legs) and the energy term proposal.
-- The network (`nn/network.py`): forward pass, backpropagation, gradient check, save and load.
-- Network testing: `nn/architectures.py`, `nn/held_out_test.py`, `nn/show_nn_gait.py` and `show_best.py`.
-- Most of `DECISIONS.md`.
-
-### Maria (Pair B)
-
-- Coxa symmetry (`coxa_symmetry.md`).
-- Genetic operators (`operators.py`): leg-block crossover and bounded mutation, with tests in `test_operators.py`.
-- The fitness graph (`fitness_graph.py`).
-- Part 2 data preparation (`nn/data.py`): the sine and cosine inputs, target scaling and its tests.
+| Task | Sujan | Jake | Lauren | Maria |
+| --- | :---: | :---: | :---: | :---: |
+| **Part 1: model and limits** | | | | |
+| Repo and environment setup, `requirements.txt` | | ✓ | ✓ | |
+| Forward kinematics (`kinematics.py`) | | ✓ | | |
+| Spider model and plotting (`spider_model.py`) | ✓ | ✓ | ✓ | |
+| Coxa limits (`coxa_limits.md`) | | | ✓ | |
+| Coxa symmetry (`coxa_symmetry.md`) | | | | |
+| Femur limits (`femur_limits.md`) | | ✓ | | |
+| Tibia limits (`tibia_limits.md`) | ✓ | | | |
+| Floor height and standing pose | ✓ | ✓ | | |
+| Combined joint limits (`joint_limits_summary.md`) | | | ✓ | |
+| **Part 1: chromosome and GA** | | | | |
+| Chromosome design (wave encoding, `DECISIONS.md` section 3) | ✓ | ✓ | | |
+| Chromosome layout and decoding (`chromosome.py`, `gait.py`) | | ✓ | | |
+| Genetic operators and their tests (`operators.py`, `test_operators.py`) | | | | |
+| GA loop, selection and elitism (`ga.py`) | | | ✓ | |
+| Repeatable seeded runs | | | ✓ | |
+| **Part 1: fitness** | | | | |
+| Support, lift and below-floor terms | ✓ | | | |
+| Forward, too-high and crowding terms | ✓ | | | |
+| Energy term | ✓ | | | |
+| Finding and fixing loopholes (sinking, legs in the air, forward at 0, lazy back legs) | ✓ | | ✓ | |
+| Fitness checks (`check_fitness()`) | ✓ | | | |
+| Fitness write-up (`fitness_design.md`) | ✓ | | | |
+| **Part 1: experiments and results** | | | | |
+| GA settings experiments (`experiments.py`, `experiments.md`) | ✓ | | | |
+| Final GA run and settings | ✓ | | ✓ | |
+| Fitness graph (`fitness_graph.py`) | | | | |
+| Saving results and foot-height plots (`save_results.py`, `foot_heights.py`) | | ✓ | | |
+| Visualisation write-up (`visualisation.md`) | | ✓ | | |
+| Gait animation (`show_best.py`) | | | ✓ | |
+| **Part 2: neural network** | | | | |
+| Network from scratch: forward pass, backpropagation, gradient check (`nn/network.py`) | | | ✓ | |
+| Training data (`nn/data.py`) | | | | |
+| Training script (`nn/train.py`) | ✓ | | | |
+| Learning-rate experiments (`nn/learning_rates.py`) | ✓ | | | |
+| Architecture comparison (`nn/architectures.py`) | | | ✓ | |
+| Held-out test (`nn/held_out_test.py`) | | | ✓ | |
+| Network size check over 3 seeds (`nn/size_check.py`) | | | ✓ | |
+| Architecture write-up (`nn/architectures.md`) | | | ✓ | |
+| Network gait animation (`nn/show_nn_gait.py`) | | | ✓ | |
+| Training write-up (`nn/training.md`) | ✓ | | | |
+| Reflection (`nn/reflection.md`) | ✓ | | | |
+| **Documentation and coordination** | | | | |
+| Design decisions (`DECISIONS.md`) | ✓ | ✓ | ✓ | |
+| README and how to run the code | ✓ | ✓ | | |
+| Contribution sheet and AI-use statement | ✓ | | | |
+| Planning, meetings and task lists | ✓ | ✓ | ✓ | ✓ |
 
 ## Agreed split
 
-| Member | Contribution (%) |
-| --- | --- |
-| Sujan | |
-| Jake | |
-| Lauren | |
-| Maria | |
+| Member | Student number | Contribution (%) |
+| --- | --- | --- |
+| Sujan | 2270752 | 25% |
+| Jake | | 25% |
+| Lauren | | 25% |
+| Maria | | 25% |
 
-Agreed by: Sujan [ ], Jake [ ], Lauren [ ], Maria [ ]
+Agreed by: Sujan [ ✓ ], Jake [ ✓ ], Lauren [ ✓ ], Maria [ ✓ ]
 
 ## Use of AI
 
