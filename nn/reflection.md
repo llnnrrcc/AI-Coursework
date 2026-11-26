@@ -28,7 +28,7 @@ The network's gait loses 0.06 of forward (0.856 against the GA's 0.917), even th
 
 The PyTorch comparison shows the same thing from the other side. PyTorch's default settings ended with a higher training error (0.0000145) but a higher gait score (2.2249). Training error and gait quality measure different things, and lowering one doesn't guarantee the other.
 
-Training could weight the frames where a foot is near the -0.25 line more heavily. Alternatively, the fitness could use a softer edge than a hard cut-off.
+Training could weight the frames where a foot is near the -0.25 line more heavily. Alternatively, the fitness could use a softer edge than a hard cut-off. A tanh hidden layer, tested later (`training.md`), already closes the gap: its error was about 2.4 times lower than sigmoid's, and all three tanh networks scored 2.226 to 2.227, the same as the GA. It wasn't adopted because the rest of Part 2 was built on the sigmoid model.
 
 ### The network can only do one walk
 

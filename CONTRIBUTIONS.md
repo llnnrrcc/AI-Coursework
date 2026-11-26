@@ -98,7 +98,7 @@ Each of us can explain the parts we worked on, as listed in the table above.
 | `README.md`, `requirements.txt` | up2274964, up2270752 | [up2274964 and up2270752 to confirm] | Wrote the setup and run instructions |
 | `nn/network.py`, `nn/network_explained.md` | up2277376 | Provided the code one part at a time (layers, forward pass, backpropagation, gradient check, saving and loading) and explained each part; drafted the explanation | up2277376 built it in stages, ran every test including the gradient check, and checked and edited the explanation |
 | `nn/data.py` | up2305949 | Step-by-step instructions, no code | up2305949 wrote and tested the data preparation |
-| `nn/train.py`, `nn/learning_rates.py`, `nn/training.md` | up2270752 | [up2270752 to confirm] | up2270752 trained the network and ran the learning rate comparison on three seeds |
+| `nn/train.py`, `nn/learning_rates.py`, `nn/compare_training.py`, `nn/training.md` | up2270752 | Wrote `compare_training.py` and drafted its write-up [up2270752 to confirm the rest] | up2270752 trained the network, ran the activation and batch size comparisons, and ran the learning rate comparison on three seeds |
 | `nn/architectures.py`, `nn/size_check.py`, `nn/held_out_test.py`, `nn/show_nn_gait.py`, `nn/architectures.md` | up2277376 | Wrote the scripts and helped structure the write-up | up2277376 ran the experiments, chose the network size and wrote the reasoning |
 | `nn/reflection.md` | up2270752 | Drafted it from the group's results; measured the joint-limit errors and the forward gap on the trained network | up2270752 rewrote it |
 | `nn/pytorch_compare.py`, `nn/pytorch_comparison.md` | up2305949 | [up2305949 to confirm] | up2305949 ran the comparison and wrote it up |

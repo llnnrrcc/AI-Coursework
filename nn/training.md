@@ -45,9 +45,39 @@ With learning rate 2.0 the final error is 0.0000039. Turned back into angles ove
 
 Scored with the GA's fitness, the network's gait gets 2.167 against the GA's 2.227. Everything matches except forward (0.856 against 0.917). Forward only counts a foot as pushing while it is at or below the top of the contact band, so an angle error of under a degree can tip a foot just above that line for a frame and lose that frame's push. It is a small loss, but it shows the fitness is stricter than the error numbers suggest.
 
+## Hidden activation and batch size
+
+Two more training choices were tested with `nn/compare_training.py` (`python -m nn.compare_training`, about 2 minutes on 16 cores): the hidden layer's activation and the batch size. Both use the [2, 16, 24] network, 2,000 epochs and seeds 0, 1 and 2. A learning rate that suits one setting can be wrong for another, so every setting was trained at three rates and the best is reported. The script checks its own backpropagation first: the gradient check passes for all three activations (7e-12 to 1e-11), and sigmoid with batch size 1 is the same training as `nn/train.py` (its seeds give 0.0000038, 0.0000037 and 0.0000023, matching the seed check below). The graphs are `nn/activations.png` and `nn/batch_sizes.png`, and every run is in `nn/compare_training.csv`.
+
+The output layer stays sigmoid in every run, so the predicted angles still can't leave their joint limits. Only the hidden layer changes:
+
+| Hidden activation | Best rate (of 0.1, 0.5, 2.0) | Final error, mean ± sd | Per seed | Gait fitness, mean |
+| --- | --- | --- | --- | --- |
+| Sigmoid (ours) | 2.0 | 0.0000033 ± 0.0000007 | 0.0000038, 0.0000037, 0.0000023 | 2.196 |
+| Tanh | 2.0 | 0.0000014 ± 0.0000003 | 0.0000016, 0.0000010, 0.0000017 | 2.227 |
+| ReLU | 0.5 | 0.0000110 ± 0.0000012 | 0.0000122, 0.0000094, 0.0000112 | 2.191 |
+
+Tanh did best. Its error was about 2.4 times lower than sigmoid's, and its worst seed (0.0000017) beat sigmoid's best (0.0000023). More usefully, all three tanh networks walk with a fitness of 2.226 to 2.227, the same as the GA's own gait (2.227), so tanh closes the forward gap described under Result. Tanh's output runs from -1 to 1 and is centred on 0, so the output layer gets inputs on both sides of zero, and its slope near 0 is 1 against sigmoid's 0.25, so the error shrinks less on its way back through the hidden layer. ReLU did worst: with only 16 hidden neurons, any that end up outputting 0 for every frame stop learning altogether, which leaves fewer to fit the curves. That reason was not tested.
+
+Sigmoid was kept for the final network, because the trained model, the comparisons above and the rest of Part 2 are built on it. Switching the hidden layer to tanh is the clearest improvement found, but it would mean retraining and re-running those results.
+
+Batch size, with a sigmoid hidden layer. A batch updates the weights once with the average gradient of its examples, so bigger batches make fewer updates per epoch:
+
+| Batch size | Best rate (of 0.5, 2.0, 8.0) | Final error, mean ± sd | Gait fitness, mean | Seconds per run |
+| --- | --- | --- | --- | --- |
+| 1 (ours) | 2.0 | 0.0000033 ± 0.0000007 | 2.196 | 61.3 |
+| 10 | 8.0 | 0.0000060 ± 0.0000010 | 2.185 | 11.6 |
+| 30 | 8.0 | 0.0000136 ± 0.0000004 | 2.205 | 4.6 |
+| 300 (the whole step) | 8.0 | 0.0000633 ± 0.0000049 | 2.202 | 1.8 |
+
+Batch size 1 learns the angles best in 2,000 epochs: 1.8 times lower error than batches of 10 and 19 times lower than the whole step at once. Bigger batches are much faster per epoch, though (34 times faster for the whole step), because one update covers many examples. The gait fitness hardly follows the error: batches of 30 and 300 scored slightly higher than batch size 1 despite errors 4 to 19 times higher, and single seeds swing between about 2.16 and 2.23 in every group. That is the same forward-line effect as under Result, so gait fitness is too noisy here to rank the batch sizes.
+
+Batch size 1 was kept, since it gives the lowest error and the training time (about a minute) is no problem for a 300-example dataset. Every batch size above 1 did best at 8.0, the highest rate tried, so they might close some of the gap at higher rates or with more epochs.
+
 ## Limits
 
 - The full four-rate comparison uses one seed (0). To check 2.0 against 0.5 was not luck, both were also trained with seeds 1 and 2. 2.0 ended lower every time: 0.0000039, 0.0000037 and 0.0000023 against 0.0000083, 0.0000115 and 0.0000085 for 0.5 (seeds 0, 1 and 2).
 - The gait repeats every 60 frames, so all 300 examples are only 60 different moments. To check the network learned the movement rather than memorising those moments, the held-out test (`nn/held_out_test.py`) trains a fresh network on the even frames only and tests it on the odd frames, which it never sees (the 60-frame repeat keeps every odd frame unseen). The error on the unseen frames (0.0000055) is the same as on the training frames (0.0000055), and the worst unseen angle is 0.023 rad (1.3 degrees) off. Its full 300-frame gait scores 2.167 on the GA's fitness, the same as the network trained on every frame.
 - The error was still falling slowly at epoch 2000, so more epochs would lower it a little more.
+- The activation and batch size comparisons use three seeds and three learning rates each. Sigmoid, tanh and the larger batches all did best at the highest rate tried, so the best rate for each may lie higher.
 
