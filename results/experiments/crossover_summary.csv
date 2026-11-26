@@ -1,0 +1,4 @@
+setting,value,seeds,final_best_mean,final_best_std,final_average_mean,gap_mean,last_improvement_mean
+crossover,leg,3,1.894,0.141,1.75,0.143,48.0
+crossover,one_point,3,1.884,0.114,1.728,0.156,48.333
+crossover,uniform,3,1.936,0.063,1.774,0.162,47.667

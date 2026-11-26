@@ -1,3 +1,13 @@
+"""
+data.py - turns a gait into training data for the neural network.
+
+make_dataset() takes the 300 frames of the 24 joint angles from gait.decode() and
+returns the inputs (sin and cos of the step phase, 2 per frame) and the targets (the 24 joint angles, scaled to 0-1 using each joint's limits).
+scale() and unscale() convert between real angles and the network's 0-1 range.
+
+Run with: python -m nn.data.py
+checks the shapes and acaling on a standing gait and a random gait.
+"""
 
 import numpy as np
 

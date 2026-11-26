@@ -1,5 +1,7 @@
 # Neural network training (Part 2)
 
+Written by Sujan.
+
 ## What the network learns
 
 The network learns to reproduce the GA's final walking gait (`final_best_chromosome.npy`: population 80, seed 1, 100 generations, fitness 2.227 with the energy term and per-leg forward scoring). Earlier versions of this write-up used the GA's previous final gaits; all numbers below are for the current one. Given where the spider is in its step, it outputs all 24 joint angles for that moment.
@@ -24,7 +26,7 @@ Stochastic gradient descent (`nn/train.py`): the network learns from one example
 
 ## Learning rate
 
-I trained with four rates, keeping everything else the same (same seed, so the same starting weights and shuffle order). Error is the mean squared error on the scaled angles.
+The network was trained with four rates, keeping everything else the same (same seed, so the same starting weights and shuffle order). Error is the mean squared error on the scaled angles.
 
 | Learning rate | Error after epoch 100 | Error after epoch 2000 |
 | --- | --- | --- |
@@ -37,7 +39,7 @@ I trained with four rates, keeping everything else the same (same seed, so the s
 - 0.5 and 2.0 both fall smoothly. 2.0 is fastest and ends lowest, with an error about 2.1 times lower than 0.5.
 - 30.0 is too high. The error jumps around from epoch to epoch and ends at 0.014, about 3,700 times worse than 2.0, so the network does not learn the gait at all. In a shorter test on an earlier gait, 10.0 still learned but its error kept jumping back up.
 
-I chose 2.0. It gave the lowest error and the fastest training with no instability, and trouble only started around 10, so it leaves a wide margin below the point where training breaks.
+2.0 was chosen. It gave the lowest error and the fastest training with no instability, and trouble only started around 10, so it leaves a wide margin below the point where training breaks.
 
 ## Result
 

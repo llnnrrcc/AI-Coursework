@@ -226,3 +226,4 @@ explore.py
 # GA experiment output (results and graphs stay local, see experiments.py)
 experiment_results*/
 test_run/
+best_chromosome.npy

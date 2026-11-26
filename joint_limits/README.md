@@ -1,4 +1,4 @@
-# Joint limits: combined (Day 3)
+# Joint limits: combined 
 
 Sources: `femur_limits.md` , `tibia_limits.md` , `coxa_limits.md` , `coxa_symmetry.md`.
 All angles in radians. Slot numbers are positions in the 24-angle vector.
@@ -46,14 +46,11 @@ Femur -0.4 and tibia -1.5 on every leg (Pair A). Coxa at the middle of each leg'
 
 Checked in the model: all eight feet sit at z = -0.295, and the nearest neighbouring feet (L1 and L2) are 1.65 apart.
 
-## Final Decisions and Remaining Limitations
+## How the open points were settled
 
-1. **Standing pose:** The group agreed to use the midpoint of each leg's permitted coxa range, with femur -0.4 and tibia -1.5 radians on all eight legs. This allows the coxa joints to swing in either direction within their limits.
+1. Standing pose coxa. We used the middle of each leg's range, as in the table above, because a coxa of 0 left L1 at its backward limit and L4 just outside its range. The middle gives every leg room to swing both ways (`DECISIONS.md` section 2).
+2. Neighbouring coxa ranges overlap. L1 and L2 can reach into each other's space, so we put neighbouring legs in opposite teams, half a cycle apart. This means they never swing towards each other at the same time. Their feet still come within 0.56 of each other at the turnaround, so `fitness.py` also penalises feet that get too close (`DECISIONS.md` section 3, `fitness_design.md`).
+3. Exact limits or a margin. We kept the exact limits with no margin, because they come from the real spider's measured range. `chromosome.py` uses these values directly.
+4. Tidying `tibia_limits.md`. The floor and femur range in that file now match the agreed values (floor -0.30, femur -0.5 to -0.2).
 
-2. **Neighbouring leg movement:** The gait uses two alternating leg teams, with neighbouring legs moving half a step apart. However, this does not eliminate close approaches between neighbouring feet. The fitness function includes a crowding penalty to discourage excessive proximity.
 
-3. **Joint limits:** The agreed coxa, femur and tibia ranges are used in the chromosome encoding. The GA operates within these limits, rather than allowing joint angles to exceed them and clipping the resulting movement afterwards.
-
-4. **Ground height:** The final floor height is z = -0.30, with a contact band from -0.35 to -0.25. This is consistent with the final standing pose and the fitness function's ground-contact criteria.
-
-These decisions are documented in `DECISIONS.md`. The simplified kinematic model does not simulate full physical contact dynamics, so the limits and fitness measures remain modelling approximations.

@@ -1,3 +1,14 @@
+"""
+network.py - a fully connected feedforward neural network with backpropagation and gradient checking.
+Written from scratch with Numpy.
+
+The network builds sigmoid layers of any size. train_step() does one forward pass, backpropagation and gradient descent update. save() and load() store the weights and biases in a .npz file.
+gradient_check() compares the backpropagation gradients with ones measured numerically, to show the maths is right.
+
+Run with: python -m nn.network.py
+Runs a gradient check (should be about 1e-11) and checks save/load, leaving a test_model.npz file you can delete.
+"""
+
 import numpy as np
 import copy
 

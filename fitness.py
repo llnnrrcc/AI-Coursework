@@ -13,6 +13,11 @@ Terms (all on a 0 to 1 scale):
   crowding  - penalise neighbouring feet that get too close together
   energy    - penalise joint movement, a stand-in for energy used
 Floor numbers come from DECISIONS.md section 2.
+
+plot_fitness_history() is called by ga.py at the end of a run.
+
+Running it directly (python fitness_graph.py) draws the graph with made-up
+test numbers, to check the plot on its own.
 """
 
 import numpy as np

@@ -9,7 +9,7 @@ Angles are in radians (1 rad is about 57 degrees).
 
 | Tibia angle | Where does the tibia point? | Folds back onto femur? | Looks realistic? | L1 foot z |
 | --- | --- | --- | --- | --- |
-| -2.0 | curls back in toward the body | yes, sharply | no by my threshold (a plausible tight bend of about 115 degrees, but reach 1.06 is under 1.5 and the foot is rising again) | -0.352 |
+| -2.0 | curls back in toward the body | yes, sharply | no by the threshold below (a plausible tight bend of about 115 degrees, but reach 1.06 is under 1.5 and the foot is rising again) | -0.352 |
 | -1.5 | down and out |partly, bent well in but not a hairpin | yes: reach 1.51 meets the 1.5 threshold, foot near its lowest |-0.57|
 | -1.0 |down and out, moderate bend |no |yes: reach 2.0 is well above 1.5, foot close to its lowest |-0.548 |
 | -0.5 |slightly down, a gentle bend |no |yes, but the foot is a little high for standing: reach 2.43, foot only just below the body |-0.292 |
@@ -70,16 +70,16 @@ Results:
 - Swing is possible: raising the tibia from -1.7 toward -0.5 lifts the foot from z = -0.378 to 0.158 at femur -0.5, giving clearance for a leg to leave the ground.
 - Settled: the group's femur range is -0.5 to -0.2 (`DECISIONS.md` section 1). The tibia verdict is the same under the earlier -0.5 to 0.0, so the limits above stand.
 
-## How I'm defining "realistic"
+## How "realistic" is defined
 
-There was no threshold in the brief, so I defined one from measurable tests run on L1 (numbers calculated from `kinematics.py`). First, reach: the foot should stay well outside its own base, so I require a horizontal reach of at least about 1.5 (the body half-width is 1.0). Second, the foot should still be getting lower as the tibia bends, because past the lowest-foot point a deeper bend only curls the leg back up toward the body. In the first pass at femur -0.8 that point was at a tibia of about -1.29, which made the limit -1.5. Across the agreed femur range (-0.5 to -0.2) the lowest-foot point moves to between -1.59 and -1.89, so that test no longer limits anything above about -1.6, and reach becomes the binding test: it stays at or above 1.5 down to about -1.83 at femur -0.5. I therefore set the minimum at -1.7, which keeps reach at 1.63 or more at every femur value and sits at about 97 degrees of flexion, within the figures reported for real spiders (about 90 degrees typical, up to about 111 degrees at the extreme). For the maximum I use 0.0, a straight leg, since a spider's knee does not bend backward past straight; at +0.5 the first pass showed hyperextension and almost no extra reach.
+There was no threshold in the brief, so one was defined from measurable tests run on L1 (numbers calculated from `kinematics.py`). First, reach: the foot should stay well outside its own base, so a horizontal reach of at least about 1.5 is required (the body half-width is 1.0). Second, the foot should still be getting lower as the tibia bends, because past the lowest-foot point a deeper bend only curls the leg back up toward the body. In the first pass at femur -0.8 that point was at a tibia of about -1.29, which made the limit -1.5. Across the agreed femur range (-0.5 to -0.2) the lowest-foot point moves to between -1.59 and -1.89, so that test no longer limits anything above about -1.6, and reach becomes the binding test: it stays at or above 1.5 down to about -1.83 at femur -0.5. The minimum is therefore set at -1.7, which keeps reach at 1.63 or more at every femur value and sits at about 97 degrees of flexion, within the figures reported for real spiders (about 90 degrees typical, up to about 111 degrees at the extreme). The maximum is 0.0, a straight leg, since a spider's knee does not bend backward past straight; at +0.5 the first pass showed hyperextension and almost no extra reach.
 
 Sources: Gartly, R. L. (2023), _Elucidating the Relationships Between Spider Size, Joint Stiffness, and the Mechanical Frequency Response of the Body_, MSc thesis, Western University, https://ir.lib.uwo.ca/etd/9835 (knee-like joints are held flexed at about 100 degrees interior angle when standing). Wang, Z. et al. (2011), Movement behavior of a spider on a horizontal surface, _Chinese Science Bulletin_ 56(25): 2748-2757, doi:10.1007/s11434-011-4584-y (femur-tibia angle measured between about 69 and 171 degrees, tibia-metatarsus between about 87 and 175 degrees). Both papers report interior angles, where 180 degrees is a straight leg, so flexion from straight (what `angles[2]` uses) is 180 minus the interior angle: about 80 degrees when standing (-1.4 rad) and up to about 111 degrees at the extreme (-1.94 rad). The model has three leg segments and a real leg has seven, so only the model's tibia hinge (femur to tibia) maps reasonably onto these joints.
-Note: threshold reasoning drafted with Claude's help; I checked it by running my own sweep.
+Note: threshold reasoning drafted with Claude's help; Sujan checked it by running his own sweep.
 
-## My tibia limits
+## Tibia limits
 
-| | Angle (rad) | Reason (one sentence, based on what I saw) |
+| | Angle (rad) | Reason (one sentence, based on what was observed) |
 | --- | --- | --- |
 | Minimum | -1.7 | Across the agreed femur range (-0.5 to -0.2) reach is still 1.63 or more at -1.7 and falls under 1.5 at about -1.83 for femur -0.5; about 97 degrees of flexion, inside the 90 to 111 degrees reported for real spiders. (-1.5 would also pass every test and is the safer alternative.) |
 | Maximum | 0.0 | Straight leg; a positive tibia (+0.5 tested) hyperextends the knee for almost no extra reach (2.67 to 2.69), and Wang's femur-tibia angle never passes straight. |
@@ -96,7 +96,7 @@ Note: threshold reasoning drafted with Claude's help; I checked it by running my
 
 Floor: z = -0.30, with a contact band of -0.35 to -0.25 (a foot counts as planted inside the band).
 
-Agreed standing pose (`DECISIONS.md` section 2): femur -0.4 and tibia -1.5 on all eight legs, with coxa at the middle of each leg's range, which does not change foot height. Confirmed by running `explore.py` on L1: foot z -0.295 (0.005 from the floor), reach 1.93. Tibia flexion is about 86 degrees. All eight feet read z -0.295 in the group's check (`joint_limits_summary.md`). The femur sits in the range where planting works (-0.5 to about -0.32), so the GA can move either way from it. Gentler alternative: femur -0.45 and tibia -1.3 (z -0.290, reach 2.07, flexion 74 degrees). The first-pass pose from the plan (femur -0.8, tibia -1.2) is outside the agreed femur range, and my earlier candidate (femur -0.5, tibia -1.4) was worked out for a floor of -0.35, so it is superseded.
+Agreed standing pose (`DECISIONS.md` section 2): femur -0.4 and tibia -1.5 on all eight legs, with coxa at the middle of each leg's range, which does not change foot height. Confirmed by running `explore.py` on L1: foot z -0.295 (0.005 from the floor), reach 1.93. Tibia flexion is about 86 degrees. All eight feet read z -0.295 in the group's check (`README.md`). The femur sits in the range where planting works (-0.5 to about -0.32), so the GA can move either way from it. Gentler alternative: femur -0.45 and tibia -1.3 (z -0.290, reach 2.07, flexion 74 degrees). The first-pass pose from the plan (femur -0.8, tibia -1.2) is outside the agreed femur range, and the earlier candidate (femur -0.5, tibia -1.4) was worked out for a floor of -0.35, so it is superseded.
 
 | Joint | Value (rad) |
 | --- | --- |

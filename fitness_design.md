@@ -1,5 +1,7 @@
 # Fitness function (A2)
 
+Written by Sujan.
+
 Status: final. It covers the six terms in `fitness.py`, used for the final GA run.
 
 ## What it does
@@ -70,7 +72,7 @@ One step is 60 frames, so every 5th frame gives 12 samples per step. One call ta
 
 ## What changed along the way
 
-- Version 1 rewarded feet inside the contact band. Standing still scored the maximum (1.000), and the term also punished lifting a foot, because a lifted foot is out of the band. I replaced it with the support term (at least 4 feet planted), which does not mind the other four lifting.
+- Version 1 rewarded feet inside the contact band. Standing still scored the maximum (1.000), and the term also punished lifting a foot, because a lifted foot is out of the band. It was replaced with the support term (at least 4 feet planted), which does not mind the other four lifting.
 - The forward term was added because standing still still scored 1.00.
 - The too-high term was added because the best evolved gait held a foot at about z = 1.4 and nothing penalised it.
 - The crowding term was added because the leg teams do not prevent close approaches: L1 and L2 still come within 0.56 at the turnaround.
@@ -89,8 +91,8 @@ One step is 60 frames, so every 5th frame gives 12 samples per step. One call ta
 
 ## How this was made
 
-Drafted with Claude's assistance  for structure legibility and flow. I ran `fitness.py` myself on the first version, with these results: standing 1.000, random mean 0.484, best 1.036 over 20 random chromosomes.
+Claude proposed the structure (support, lift and below floor) and helped in writing the code for those three terms and the hand-made gaits. Sujan ran `fitness.py` on the first version, with these results: standing 1.000, random mean 0.484, best 1.036 over 20 random chromosomes.
 
-The loophole analysis, the re-scored check table, the seeded GA results, the 100-generation run and `check_fitness()` were done with Claude's help. The energy term was proposed and tested in Lauren's session with Claude; I added it to `fitness.py` and ran the final GA, which matched her test run exactly (2.354, energy 0.292).
+Claude ran the loophole analysis and the seeded GA comparisons, re-scored the check table, ran the first 100-generation test and helped Sujan write `check_fitness()`. Sujan then re-ran `fitness.py` and the final energy GA on his own machine, and the numbers matched. The energy term was proposed and tested in Lauren's session with Claude; Sujan added it to `fitness.py` and re-ran the GA, which matched her test run exactly (2.354, energy 0.292). This was before the per-leg forward change; the final run (2.227) is described below.
 
-The per-leg forward change and the lazy-back-legs loophole were Lauren's. The numbers for the final run and the check table were re-run with Claude's help.
+The lazy-back-legs loophole was spotted by Lauren; the per-leg forward fix was worked out and tested in her session with Claude. The numbers for the final run and the check table were re-run with Claude's help. See also the AI-use statement in `CONTRIBUTIONS.md`.
