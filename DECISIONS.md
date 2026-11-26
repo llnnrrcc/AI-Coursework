@@ -59,6 +59,8 @@ Right-side coxa: same amplitude, offset sign flipped. Femur and tibia are the sa
 - **Why fixed:** real spiders walk in these teams (Wang et al., 2011), and fixing them means half the legs are always in the stance half of their step, spread across both sides of the body. Whether those feet are actually on the floor depends on the femur and tibia timing, which the GA chooses, so the fitness rewards it (`support_reward`) rather than assuming it. The GA would otherwise have to discover this pattern by trial and error. Neighbouring legs in opposite teams do pass closest at the turnaround, where L1 and L2's feet come within 0.56 (against 1.59 if they moved in step), but their leg segments stay at least 0.49 apart, so they never cross. `fitness.py` should still penalise neighbouring feet that get too close. To stop the GA undoing the teams, each coxa's timing gene is limited to a small window around its team's timing. Femur and tibia timing stay free, so the GA can still choose when in the step each leg lifts.
 
 
+**Origin:** the wave design was proposed by Claude. The cycle and floor numbers were run in the model with Claude's help. See also the AI-use statement in `CONTRIBUTIONS.md`.
+
 ### Keeping genes inside the joint limits
 
 Each joint has three genes, each with a fixed range:
@@ -76,6 +78,8 @@ The joint moves within centre ± size × (distance from centre to the nearer lim
 ### Crossover by leg
 
 Genes are stored leg by leg (L1, L2, L3, L4; the right side mirrors them), 9 genes per leg. Crossover takes each leg whole from one parent or the other. A step only works when a leg's joints are coordinated, for example the femur lifting while the coxa swings forward, so swapping whole legs keeps each working leg intact while still mixing the parents.
+
+Tested against 1-point and uniform crossover over three seeds (`experiments.md`, "Crossover comparison"): all three ended within 0.052 of each other, inside the spread between seeds, so the expected advantage of keeping legs whole did not show up. Leg-block was kept because it did no worse.
 
 ### Mutation
 
@@ -165,7 +169,7 @@ Genes could take any value, with angles clipped to the joint limits when decodin
 Crossover could cut anywhere in the gene list. Rejected because:
 
 - **It could split a joint:** a joint's centre could come from one parent and its size from the other. Size is measured from the centre, so the movement would change unpredictably.
-- **It could split a leg:** the femur's timing could come from one parent and the coxa's from the other, so the lift would no longer line up with the forward swing and the foot would drag.
+- **It could split a leg:** the femur's timing could come from one parent and the coxa's from the other, so the lift would no longer line up with the forward swing and the foot would drag. In testing this did not measurably hurt the results (`experiments.md`, "Crossover comparison"), so this rejection rests on the design argument rather than on evidence.
 
 
 ### Roulette wheel selection
