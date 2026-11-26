@@ -11,6 +11,8 @@ When both coxa angles were set to 0.4 radians, the foot positions were no longer
 
 **Conclusion:** The right coxa angle must have the opposite sign to the left coxa angle to produce mirrored leg positions. The femur and tibia angles can remain the same.
 
+**Note:** These tests were carried out to investigate the geometric symmetry of the spider model before the final joint limits were agreed. Some test angles fall outside the final permitted ranges. The results demonstrate how left and right leg positions are mirrored, rather than representing a valid standing or walking pose under the final constraints.
+
 ## 2. Coxa Symmetry Test Results
 
 | Test | L1 coxa (rad) | R1 coxa (rad) | L1 foot (X, Y, Z) | R1 foot (X, Y, Z) | Mirrored? |
@@ -18,7 +20,7 @@ When both coxa angles were set to 0.4 radians, the foot positions were no longer
 | Same signs | 0.4 | 0.4 | (1.740, 2.381, -0.587) | (2.735, -1.386, -0.587) | No |
 | Opposite signs | 0.4 | -0.4 | (1.740, 2.381, -0.587) | (1.740, -2.381, -0.587) | Yes |
 
-## 3. Left-Right Leg Symmetry and Chromosome Indices
+## 3. Left-Right Leg Symmetry and Joint Angle Indices
 
 | Mirror pair | Left coxa | Right coxa | Left femur | Right femur | Left tibia | Right tibia |
 |---|---|---|---|---|---|---|

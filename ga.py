@@ -1,3 +1,13 @@
+"""
+ga.py - the genetic algorithm that evolves the spider's gait
+
+Using a set of randomly generated chromosomes, scored against the fitness function, keeping the best unchanged (elitism) and selecting the rest by tournament selection, crossover and mutation.
+
+Run with: python ga.py
+Saves the best chromosome to best_chromosome.npy and plots the fitness history.
+the settings are defaults that vary in the experiments.
+"""
+
 import numpy as np
 
 from chromosome import N_GENES, LOW, HIGH, random_chromosome

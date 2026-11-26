@@ -1,4 +1,9 @@
+"""
+fitness_graph.py - plots the best and average fitness of each GA generation, to show how the population improves over time.
+plot_fitness_history() is called by ga.py at the end of a run.
 
+Running it directly (python fitness_graph.py) draws the graph with made-up test numbers, to check the plot on its own.
+"""
 import matplotlib.pyplot as plt
 
 

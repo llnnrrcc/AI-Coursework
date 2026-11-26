@@ -37,7 +37,7 @@ def crossover(p1, p2, rng=None):
     return child1, child2
 
 
-def mutate(chromosome, rate, rng=None):
+def mutate(chromosome, rate, rng=None, step_size=0.05):
     """Mutate genes while keeping all values within their bounds."""
     
     if rng is None:
@@ -49,6 +49,9 @@ def mutate(chromosome, rate, rng=None):
 
     if not 0 <= rate <= 1:
         raise ValueError("Mutation rate must be between 0 and 1")
+    
+    if not np.isfinite(step_size) or step_size < 0:
+        raise ValueError("step_size must be a finite, non-negative number")
 
     mutated = chromosome.copy()
 
@@ -58,9 +61,8 @@ def mutate(chromosome, rate, rng=None):
 
             # Small change relative to the gene's allowed range
             change = rng.normal(
-                0, 0.05 * (HIGH[i] - LOW[i])
+                0, step_size * (HIGH[i] - LOW[i])
             )
-
             mutated[i] += change
 
             # Every third gene is a timing gene

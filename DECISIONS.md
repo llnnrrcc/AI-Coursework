@@ -8,7 +8,7 @@
 | Femur | -0.5 to -0.2 | Every leg | `joint_limits/femur_limits.md` |
 | Tibia | -1.7 to 0.0 | Every leg | `joint_limits/tibia_limits.md` |
 
-The full per-leg table with slot numbers is in `joint_limits/joint_limits_summary.md`.
+The full per-leg table with slot numbers is in `joint_limits/joint_limits/README.md`.
 
 **Why:** femur and tibia limits come from testing L1 for leg shape, reach and whether the foot can reach the ground, checked against each other because they depend on each other. Coxa limits come from testing the front and back legs against real spider measurements (Wang et al., 2011). They differ per leg because each leg is attached at a different angle around the body, so one shared range would let front legs swing into their neighbours and stop back legs reaching their working range.
 
@@ -83,7 +83,7 @@ Tested against 1-point and uniform crossover over three seeds (`experiments.md`,
 
 ### Mutation
 
-The genetic algorithm uses a mutation rate of 0.1, meaning each gene has a 10% probability of being mutated. Selected genes receive a small random adjustment from a normal distribution, with a standard deviation equal to 5% of the gene's allowed range. This allows the algorithm to introduce variation without usually making large changes to an existing movement pattern.
+The genetic algorithm uses a mutation rate of 0.1, meaning each gene has a 10% probability of being mutated. Selected genes receive a small random adjustment drawn from a normal distribution. The mutation step size is configurable, with a default standard deviation of 5% of each gene's permitted range. This allows us to adjust mutation strength without changing the genetic operators' implementation. This allows the algorithm to introduce variation without usually making large changes to an existing movement pattern.
 
 Centre and size genes are clipped to their permitted bounds after mutation. Coxa timing is also clipped to its restricted range of -0.125 to +0.125 to preserve the predefined leg teams. Femur and tibia timing use wrap-around because timing represents a repeating cycle, so a value of 1.1 becomes 0.1.
 
