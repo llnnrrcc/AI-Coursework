@@ -20,7 +20,7 @@ The animation is good for spotting that something is odd, but the floor is only 
 
 **What happened.** Run with seed 42 and population 40, before commit `fbc58bd`. At that point a foot only counted as planted inside the band. The GA found that a foot dropped below -0.35 was "not planted", so it could swing forwards under the floor without cancelling the forward reward. The small below-floor penalty did not stop this.
 
-**How it showed up.** In the graph, L2 and L4 never rise above the band: their highest points are -0.294 and -0.314. Instead they dip below it, to -0.364 and -0.354, and that is where they move forwards. Healthy feet (L1, L3) do the opposite: they dip into the band and rise well above it. The right partners R2 and R4 copy L2 and L4, so four of the eight legs were doing this. **[check: say who spotted it first, and whether the animation or the numbers raised it.]**
+**How it showed up.** In the graph, L2 and L4 never rise above the band: their highest points are -0.294 and -0.314. Instead they dip below it, to -0.364 and -0.354, and that is where they move forwards. Healthy feet (L1, L3) do the opposite: they dip into the band and rise well above it. The right partners R2 and R4 copy L2 and L4, so four of the eight legs were doing this.
 
 **The fix.** A foot at or below -0.25 now counts as touching the floor (commit `fbc58bd`), so a sunk foot moving forwards cancels the forward reward. The best score at generation 50 fell from 1.76 to 1.57. That is not a worse gait: the GA lost points it had been getting without walking.
 
@@ -44,4 +44,4 @@ In the final gait every foot dips into the band and rises well above it. Their h
 
 ## Reproducing the earlier runs
 
-The code that produced the two faulty gaits has since changed, so their best chromosomes are saved in `results/earlier_runs/` and `python foot_heights.py` redraws both graphs. They were made by checking out the commit before each fix and running `run_ga(42)` (population 40, 50 generations). The final scores match the ones in `fitness_design.md`: 1.76 before the sinking fix and 1.57 after it.
+The code that produced the two faulty gaits has since changed, so their best chromosomes are saved in `results/earlier_runs/`, and `python foot_heights.py` redraws both graphs from them. Both runs used `run_ga(42)` (population 40, 50 generations) with the fitness as it was before each fix. The final scores match the ones in `fitness_design.md`: 1.76 before the sinking fix and 1.57 after it.

@@ -18,7 +18,7 @@
 | **Part 1: chromosome and GA** | | | | |
 | Chromosome design (wave encoding, `DECISIONS.md` section 3) | ✓ | ✓ | | ✓ |
 | Chromosome layout and decoding (`chromosome.py`, `gait.py`) | | ✓ | | |
-| Genetic operators and their tests (`operators.py`, `test_operators.py`) | | | | |
+| Genetic operators and their tests (`operators.py`, `test_operators.py`) | | | | ✓ |
 | GA loop, selection and elitism (`ga.py`) | | | ✓ | |
 | Repeatable seeded runs | | | ✓ | ✓ |
 | **Part 1: fitness** | | | | |
@@ -37,7 +37,7 @@
 | Gait animation (`show_best.py`) | | | ✓ | |
 | **Part 2: neural network** | | | | |
 | Network from scratch: forward pass, backpropagation, gradient check (`nn/network.py`) | | | ✓ | |
-| Training data (`nn/data.py`) | | | | |
+| Training data (`nn/data.py`) | | | | ✓ |
 | Training script (`nn/train.py`) | ✓ | | | |
 | Learning-rate experiments (`nn/learning_rates.py`) | ✓ | | | |
 | Architecture comparison (`nn/architectures.py`) | | | ✓ | |
@@ -102,7 +102,7 @@ Each of us can explain the parts we worked on, as listed in the table above.
 | `nn/architectures.py`, `nn/size_check.py`, `nn/held_out_test.py`, `nn/show_nn_gait.py`, `nn/architectures.md` | up2277376 | Wrote the scripts and helped structure the write-up | up2277376 ran the experiments, chose the network size and wrote the reasoning |
 | `nn/reflection.md` | up2270752 | Drafted it from the group's results; measured the joint-limit errors and the forward gap on the trained network | up2270752 rewrote it |
 | `nn/pytorch_compare.py`, `nn/pytorch_comparison.md` | up2305949 | [up2305949 to confirm] | up2305949 ran the comparison and wrote it up |
-| `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Corrected the knee directions in the controller, found that the hip motors were too weak, added the hip fan, the foot levelling and the swing lift test, ran the Webots tests on up2270752's machine and drafted the results | up2277376 wrote the controller; up2270752 spotted the legs passing through each other, the back legs tangling, the hovering third pair and the dragging front foot [up2277376 and up2270752 to confirm] |
+| `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Wrote the controller (`gait_player.py`) and the export script for up2277376; corrected the knee directions after testing, found that the hip motors were too weak, added the hip fan, the foot levelling and the swing lift test, ran most of the Webots tests on up2270752's machine and drafted the results | up2277376 set up the files for the module's Webots world; up2270752 ran simulations, checked the results and spotted the legs passing through each other, the back legs tangling, the hovering third pair and the dragging front foot |
 
 ### Ideas that came from Claude, and how we checked them
 
