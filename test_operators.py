@@ -1,3 +1,12 @@
+"""
+test_operators.py - tests for crossover and mutation in operators.py
+
+checks that crossover swaps whole legs between parents, 
+that mutation keeps the genes within their limits, 
+and that using the same random seed gives the same results.
+
+run with: python test_operators.py
+"""
 
 import numpy as np
 from chromosome import N_GENES, LOW, HIGH
