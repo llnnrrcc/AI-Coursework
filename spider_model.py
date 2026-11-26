@@ -1,7 +1,7 @@
 """
 spider_model.py - the spider's body and legs in Python, based on the MATLAB plot_spider_pose.m
 
-spider_joints() uses kinematics.py to work out where all 8 leg's joints are for a set of 24 angles, without plotting, so fitness.py can call it quickly.
+spider_joints() uses kinematics.py to work out where all 8 legs' joints are for a set of 24 angles, without plotting, so fitness.py can call it quickly.
 plot_spider_pose() and draw_legs() draw the body and legs in 3D.
 
 Run with: python spider_model.py
