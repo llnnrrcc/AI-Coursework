@@ -96,7 +96,7 @@ We used Claude (Anthropic's AI assistant) throughout this coursework. We used it
 | `nn/architectures.py`, `nn/size_check.py`, `nn/held_out_test.py`, `nn/show_nn_gait.py`, `nn/architectures.md` | up2277376 | Wrote the scripts and helped structure the write-up | up2277376 ran the experiments, chose the network size and wrote the reasoning |
 | `nn/reflection.md` | up2270752 | Drafted it from the group's results; measured the joint-limit errors and the forward gap on the trained network | up2270752 rewrote it |
 | `nn/pytorch_compare.py`, `nn/pytorch_comparison.md` | up2305949 | [up2305949 to confirm] | up2305949 ran the comparison and wrote it up |
-| `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Corrected the knee directions in the controller and ran the Webots tests on up2270752's machine | up2277376 wrote the controller [up2277376 and up2270752 to confirm] |
+| `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Wrote the controller (`gait_player.py`) and the export script for up2277376; corrected the knee directions after testing and ran the Webots tests on up2270752's machine | up2277376 set up the files for the module's Webots world; up2270752 ran the simulations and checked the results |
 
 ### Ideas that came from Claude, and how we checked them
 
