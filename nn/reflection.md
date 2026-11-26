@@ -6,56 +6,56 @@ Each weakness below comes with the evidence for it and a suggested improvement. 
 
 ## What went well
 
-The network learned the movement rather than memorising the frames. Lauren's held-out test trains a fresh network on the even frames only and tests it on the odd frames, which it never sees. The error came out the same on both (0.0000055), and the worst unseen angle was 1.3 degrees off.
+The network learned the movement, not a list of frames. Lauren's held-out test trains a fresh network on the even frames only and tests it on the odd frames, which it never sees. The error was the same on both (0.0000055), and the worst unseen angle was only 1.3 degrees off.
 
-It walks almost exactly like the GA. Scored with the GA's fitness, the network's 300-frame gait gets 2.167 against the GA's 2.227, and its angles are 0.0010 rad off on average. Support and lift match exactly and the penalties to within 0.003; the gap is almost all in forward, which is covered below.
+It also walks almost exactly like the GA. Scored with the GA's own fitness function, the network's gait gets 2.167 against the GA's 2.227, with angles 0.0010 rad off on average. Support and lift match exactly and the penalties are within 0.003, so nearly the whole gap is in forward, which is covered under the weaknesses.
 
-We know backpropagation is right, not just that the error goes down. The gradient check in `nn/network.py` compares it with gradients measured by nudging every weight, and they match to about 1e-11 for one and two hidden layers.
+Backpropagation was proven correct, not just assumed from a falling error. The gradient check matches it against measured gradients to about 1e-11, for one and two hidden layers. Maria's PyTorch comparison then trained the same network with matched settings and ended with weights within 1.95e-13 of ours, the same error and the same gait score (2.166839).
 
-The main choices come from experiments rather than guesses. Four learning rates were compared, then 2.0 was checked against 0.5 on three seeds, and 2.0 won every time. The architecture comparison tried six network sizes.
+The main settings came from experiments. Four learning rates were compared, and 2.0 then beat 0.5 on all three seeds tried. The network size was checked over three random starts: 16 hidden neurons kept the worst foot error under 0.005 every time, while 8 did not, and 32 gave no better gait score for twice the weights.
 
-We found the problems in the fitness by watching what the evolved gaits actually did, not just by reading their scores. Four loopholes came up this way: feet sinking under the floor, legs held up in the air, the forward reward stopping at 0, and lazy back legs (`fitness_design.md`).
-
-The lazy back legs are the clearest example. The previous final gait scored perfectly, but in `show_best.py` its front and back legs barely moved. The numbers backed that up: forward was averaged over all eight feet before it was capped, so L3 and R3 were pushing 2.8 and 3.0 times their share while the back legs pushed only 0.02 of theirs. Lauren changed forward so each foot is capped on its own. In the new final gait every coxa swings between 0.30 and 0.50 rad and the back legs push 0.69 of their share instead of 0.02. A perfect score had hidden a gait that only looked wrong once someone watched it.
+The fitness problems were found by watching the gaits, not by reading the scores. Four loopholes came up this way: feet sinking under the floor, legs held in the air, the forward reward stopping at 0, and lazy back legs. The lazy back legs are the clearest case. The previous final gait scored perfectly, but in show_best.py its front and back legs barely moved. The numbers backed that up: L3 and R3 were pushing 2.8 and 3.0 times their share of the forward target while the back legs pushed 0.02 of theirs. After the per-leg fix, the back legs push 0.69 of their share and every coxa swings between 0.30 and 0.50 rad. A perfect score had hidden a gait that only looked wrong once someone watched it.
 
 ## Weaknesses
 
 ### Joints at their limits are learned less well
 
-The output layer is a sigmoid, which only gets close to 0 and 1 and never reaches them, and it goes very flat near both ends. So the network struggles with any joint whose target sits at one of its limits. In the final gait the back legs' tibias (L4 and R4) bend all the way to the -1.7 rad limit, which is a target of exactly 0, and those are the two worst joints: 0.99 degrees off at worst (L4 tibia, frame 93), when no other joint is worse than 0.37 degrees. Across all joints, targets within 0.03 of either end average 0.0018 rad of error, twice the 0.0009 rad everywhere else.
+The output layer uses a sigmoid, which gets close to 0 and 1 but never reaches them, and flattens out near both. In the final gait the back legs' tibias bend right to the -1.7 rad limit, which is a target of exactly 0. Those two joints have the worst errors by a distance: 0.99 degrees for the L4 tibia (frame 93) and 0.97 for R4, when no other joint is worse than 0.37. Across all joints, targets within 0.03 of either end average 0.0018 rad of error, twice the 0.0009 rad elsewhere.
 
-Scaling the targets to 0.05 to 0.95 instead of 0 to 1 should fix this, because no target would sit in the flat part of the sigmoid, and the predicted angles would still stay inside the joint limits.
+Scaling the targets to 0.05 to 0.95 instead of 0 to 1 should fix this. No target would sit in the flat part of the sigmoid, and every predicted angle would still stay inside its joint limits.
 
 ### Small angle errors cost forward score
 
-The network's gait loses 0.06 of forward (0.856 against the GA's 0.917) even though its angles are under a degree off. Forward only counts a foot as pushing while it is at or below the top of the contact band, so a tiny error can lift a foot just over that line for a frame and that frame's push is lost. The error numbers make the network look closer to the GA than the fitness does.
+The network's gait loses 0.06 of forward (0.856 against the GA's 0.917), even though its angles are under a degree off. Forward only counts a foot as pushing while it sits at or below z = -0.25, so a tiny error can lift a foot just over that line for a frame, and that frame's push is lost.
 
-Training could weight the frames where a foot is near that line more heavily, or the fitness could use a softer edge than a hard cut-off at the top of the band.
+Maria's PyTorch comparison shows the same thing from the other side. PyTorch's default settings ended with a higher training error (0.0000145) but a higher gait score (2.2249). Training error and gait quality measure different things, and lowering one doesn't guarantee the other.
+
+Training could weight the frames where a foot is near the -0.25 line more heavily. Alternatively, the fitness could use a softer edge than a hard cut-off.
 
 ### The network can only do one walk
 
-It was trained on one gait, so that's the only gait it can produce. It can't walk faster or slower, and it can't turn. Its only inputs are the sine and cosine of the step phase, so nothing tells it how fast to go or which way, and for a given moment in the step it always gives the same answer.
+The network was trained on one gait, so that is the only gait it can produce. It can't walk faster, slower or turn. Its only inputs are the sine and cosine of the step phase, and the gait repeats every 60 frames, so the whole training set is 60 different moments of one step.
 
-A fix would be to run the GA a few times for different speeds (for example by changing the forward target), train on all of those gaits together, and add the speed as a third input.
+A fix would be to run the GA several times for different speeds, train on all of those gaits together, and add speed as a third input.
 
 ### The fitness caps decide the walk
 
-The GA has no reason to push past the forward target, so it doesn't. In the final gait the front and middle legs each sweep 0.98 to 1.03 of the target, right at the cap (`fitness_design.md`). So the walking speed comes from a number we picked, not from what a real spider does, and the network inherits that because it learns this gait. The back legs also still push less than the others (0.69 of the target), so the per-leg fix helped but didn't finish the job.
+The GA has no reason to push past the forward target, so it doesn't. In the final gait the front and middle legs each push 0.98 to 1.03 of the target, right at the cap, so the walking speed comes from a number we picked rather than from what a real spider does. The network learns this gait, so it inherits the same limit. The back legs also still push less than the others (0.69 of the target), so the per-leg fix helped without fully solving it.
 
-A speed reward that keeps rising instead of a capped forward term, or caps based on real spider data, would let the walk be decided by something more meaningful.
+A speed reward that keeps rising instead of a capped forward term would let the walk be decided by something more meaningful than the cap.
 
 ### Only three seeds for the comparisons
 
-Most of our comparisons now use three random starts, but three is still few. The full four-rate learning-rate comparison used one seed, and only 2.0 against 0.5 was repeated: 2.0 won on seeds 0, 1 and 2 (0.0000039, 0.0000037 and 0.0000023 against 0.0000083, 0.0000115 and 0.0000085). The network size was checked over three random starts in `nn/architectures.md`, and the gaps there are small. The worst foot error was 0.0062 for 8 hidden neurons, 0.0047 for 16 and 0.0043 for 32, and the average gait scores sat within 0.014 of each other. With only three runs each, gaps that small could shift with more seeds.
+Three seeds is enough to catch a lucky run but not to settle a close result. The full four-rate learning-rate comparison used one seed, and only 2.0 against 0.5 was repeated on three: 2.0 won each time (0.0000039, 0.0000037 and 0.0000023, against 0.0000083, 0.0000115 and 0.0000085). In the size check, the worst foot errors for 8, 16 and 32 neurons were 0.0062, 0.0047 and 0.0043, and the average gait scores were within 0.014 of each other. Gaps that small could shift with more runs.
 
-More seeds would firm these up, for example ten per setting with the average and spread reported, the same way the GA settings are reported in `experiments.md`.
+Ten seeds per setting, with the average and spread reported, would firm these up.
 
 ### No physics or inverse kinematics
 
-The model has no gravity, balance or friction, and the body is fixed in place. Forward motion is worked out from feet sweeping backwards while they touch the floor, not from the body actually moving, and the fitness only looks at where the feet are. The joint angles are generated directly too, so no foot is ever placed at a point we chose, which means there's no inverse kinematics. The brief says full physics isn't needed, but this is still the biggest gap between our model and a real spider.
+The model has no gravity, balance or friction, and the body is fixed in place. Forward motion is worked out from feet sweeping backwards while they touch the floor, not from the body actually moving.
 
-The next step would be running the final gait in the provided Webots model, which does have physics, to see whether the spider actually moves forward and stays upright. Inverse kinematics could then plan where each foot goes, with the network learning the angles that get it there.
+[Placeholder: replace with Webots result once it's in: what was run, how far the spider moved, and whether it stayed upright.]
 
 ## How this was made
 
-Drafted by Claude from the group's write-ups and test results, then checked and edited by Sujan. The figures for joints at their limits and the network's fitness breakdown were measured on the network trained on the final gait, for this reflection. See also the AI-use statement in `CONTRIBUTIONS.md`.
+Drafted with Claude from the group's results, then rewritten by Sujan. Claude measured the joint-limit errors and the forward gap on the trained network. See also the AI-use statement in CONTRIBUTIONS.md.
