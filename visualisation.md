@@ -22,7 +22,7 @@ The animation is good for spotting that something is odd, but the floor is only 
 
 **How it showed up.** In the graph, L2 and L4 never rise above the band: their highest points are -0.294 and -0.314. Instead they dip below it, to -0.364 and -0.354, and that is where they move forwards. Healthy feet (L1, L3) do the opposite: they dip into the band and rise well above it. The right partners R2 and R4 copy L2 and L4, so four of the eight legs were doing this. **[check: say who spotted it first, and whether the animation or the numbers raised it.]**
 
-**The fix.** A foot at or below -0.25 now counts as touching the floor (Lauren, `fbc58bd`), so a sunk foot moving forwards cancels the forward reward. The best score at generation 50 fell from 1.76 to 1.57. That is not a worse gait: the GA lost points it had been getting without walking.
+**The fix.** A foot at or below -0.25 now counts as touching the floor (commit `fbc58bd`), so a sunk foot moving forwards cancels the forward reward. The best score at generation 50 fell from 1.76 to 1.57. That is not a worse gait: the GA lost points it had been getting without walking.
 
 ## Fault 2: legs held in the air (hovering)
 
@@ -32,7 +32,7 @@ The animation is good for spotting that something is odd, but the floor is only 
 
 **How it showed up.** L2's foot never comes near the floor: its lowest point is -0.093, far above the band, so L2 and R2 hover for the whole step. The other six legs still kept four feet down, so the support reward did not notice. It was confirmed by checking each foot's lowest point (`fitness_design.md`), which is what the bottom of each line in the graph shows.
 
-**The fix.** Lift now only counts for a foot that touches the floor at some point in the step (Sujan, `e239a78`).
+**The fix.** Lift now only counts for a foot that touches the floor at some point in the step (commit `e239a78`).
 
 The same graph also shows L4 shuffling inside the band without lifting clear of it (highest -0.255). This is the back-leg weakness listed under known limits in `fitness_design.md`. It went away in the final population-80 run.
 
@@ -45,7 +45,3 @@ In the final gait every foot dips into the band and rises well above it. Their h
 ## Reproducing the earlier runs
 
 The code that produced the two faulty gaits has since changed, so their best chromosomes are saved in `results/earlier_runs/` and `python foot_heights.py` redraws both graphs. They were made by checking out the commit before each fix and running `run_ga(42)` (population 40, 50 generations). The final scores match the ones in `fitness_design.md`: 1.76 before the sinking fix and 1.57 after it.
-
-## How this was made
-
-Claude wrote `save_results.py` and `foot_heights.py`, re-ran the two earlier runs, and drafted this write-up from `fitness_design.md`. See also the AI-use statement in `CONTRIBUTIONS.md`.

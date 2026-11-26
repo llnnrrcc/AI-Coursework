@@ -73,4 +73,3 @@ Each leg needs its own coxa range. One shared range doesn't work, because L1's a
 > - The right side mirrors these ranges with the sign flipped (B2 to confirm).
 > - The coxa rotates around the vertical axis at the hip, so it never changes foot height. Unlike the femur and tibia, its limits don't depend on the other joints, so no combined sweep was needed.
 > - The model's leg lengths and attachment points differ from the real spider, so these ranges should be checked against the model when the gait runs.
-> - Angle conversions and Result wording drafted with Claude's help; all poses were run and checked by me in explore.py.

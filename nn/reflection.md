@@ -1,16 +1,14 @@
 # Reflection on the neural network (Part 2)
 
-Written by Sujan.
-
 Each weakness below comes with the evidence for it and a suggested improvement. None of the improvements have been tested.
 
 ## What went well
 
-The network learned the movement, not a list of frames. Lauren's held-out test trains a fresh network on the even frames only and tests it on the odd frames, which it never sees. The error was the same on both (0.0000055), and the worst unseen angle was only 1.3 degrees off.
+The network learned the movement, not a list of frames. The held-out test trains a fresh network on the even frames only and tests it on the odd frames, which it never sees. The error was the same on both (0.0000055), and the worst unseen angle was only 1.3 degrees off.
 
 It also walks almost exactly like the GA. Scored with the GA's own fitness function, the network's gait gets 2.167 against the GA's 2.227, with angles 0.0010 rad off on average. Support and lift match exactly and the penalties are within 0.003, so nearly the whole gap is in forward, which is covered under the weaknesses.
 
-Backpropagation was proven correct, not just assumed from a falling error. The gradient check matches it against measured gradients to about 1e-11, for one and two hidden layers. Maria's PyTorch comparison then trained the same network with matched settings and ended with weights within 1.95e-13 of ours, the same error and the same gait score (2.166839).
+Backpropagation was proven correct, not just assumed from a falling error. The gradient check matches it against measured gradients to about 1e-11, for one and two hidden layers. The PyTorch comparison (`pytorch_comparison.md`) then trained the same network with matched settings and ended with weights within 1.95e-13 of ours, the same error and the same gait score (2.166839).
 
 The main settings came from experiments. Four learning rates were compared, and 2.0 then beat 0.5 on all three seeds tried. The network size was checked over three random starts: 16 hidden neurons kept the worst foot error under 0.005 every time, while 8 did not, and 32 gave no better gait score for twice the weights.
 
@@ -28,7 +26,7 @@ Scaling the targets to 0.05 to 0.95 instead of 0 to 1 should fix this. No target
 
 The network's gait loses 0.06 of forward (0.856 against the GA's 0.917), even though its angles are under a degree off. Forward only counts a foot as pushing while it sits at or below z = -0.25, so a tiny error can lift a foot just over that line for a frame, and that frame's push is lost.
 
-Maria's PyTorch comparison shows the same thing from the other side. PyTorch's default settings ended with a higher training error (0.0000145) but a higher gait score (2.2249). Training error and gait quality measure different things, and lowering one doesn't guarantee the other.
+The PyTorch comparison shows the same thing from the other side. PyTorch's default settings ended with a higher training error (0.0000145) but a higher gait score (2.2249). Training error and gait quality measure different things, and lowering one doesn't guarantee the other.
 
 Training could weight the frames where a foot is near the -0.25 line more heavily. Alternatively, the fitness could use a softer edge than a hard cut-off.
 
@@ -59,7 +57,3 @@ To see how much that matters, we played the GA's final gait (2.227) on the modul
 With the legs passing through each other, the spider walked 1.62 m. With self-collision turned on, it managed 0.475 m, under a third of that, and drifted 0.35 m to the side. With the module's original hip motors, the same thigh and knee movements pushed it 1.51 m backwards, so the forward motion really does come from the hip swing that our forward term rewards. The gait copes with gravity and friction, then, but it was evolved for a different body, and the distance can't be compared with the fitness score. Only the GA's gait was run, not the network's. The full results are in webots/README.md.
 
 Scoring each gait by how far it walks in Webots, with self-collision on, would make the GA optimise the actual walk rather than a stand-in for it. Each run took about 30 seconds of simulation, against a fraction of a second for the kinematic fitness, so this would suit a final tuning stage rather than the whole GA run.
-
-## How this was made
-
-Drafted with Claude from the group's results, then rewritten by Sujan. Claude measured the joint-limit errors and the forward gap on the trained network. The Webots runs used Lauren's controller; Claude corrected its knee directions and ran the tests on Sujan's machine. See also the AI-use statement in CONTRIBUTIONS.md.

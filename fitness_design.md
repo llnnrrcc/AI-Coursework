@@ -1,7 +1,5 @@
 # Fitness function (A2)
 
-Written by Sujan.
-
 Status: final. It covers the six terms in `fitness.py`, used for the final GA run.
 
 ## What it does
@@ -76,11 +74,11 @@ One step is 60 frames, so every 5th frame gives 12 samples per step. One call ta
 - The forward term was added because standing still still scored 1.00.
 - The too-high term was added because the best evolved gait held a foot at about z = 1.4 and nothing penalised it.
 - The crowding term was added because the leg teams do not prevent close approaches: L1 and L2 still come within 0.56 at the turnaround.
-- Sinking instead of lifting. What the GA did: a foot only counted as planted inside the band, so a foot below -0.35 counted as not planted. The GA used this for the return stroke: instead of lifting a foot to bring it forward, it dropped it under the floor. In the seeded run, L2, L4 and their right partners never rose above the band (highest points -0.30 and -0.31) and went below it instead (lowest -0.36 and -0.35), and 20% of forward-moving foot steps happened below -0.35. The forward reward was not cancelled, because those feet did not count as planted, and the below-floor penalty for being 0.01 to 0.03 deep was small. Fix (Lauren, commit fbc58bd): a foot at or below -0.25 counts as touching the floor, so a sunk foot moving forwards now cancels forward reward.
+- Sinking instead of lifting. What the GA did: a foot only counted as planted inside the band, so a foot below -0.35 counted as not planted. The GA used this for the return stroke: instead of lifting a foot to bring it forward, it dropped it under the floor. In the seeded run, L2, L4 and their right partners never rose above the band (highest points -0.30 and -0.31) and went below it instead (lowest -0.36 and -0.35), and 20% of forward-moving foot steps happened below -0.35. The forward reward was not cancelled, because those feet did not count as planted, and the below-floor penalty for being 0.01 to 0.03 deep was small. Fix (commit fbc58bd): a foot at or below -0.25 counts as touching the floor, so a sunk foot moving forwards now cancels forward reward.
 - Legs held in the air. What the GA did: after the sinking fix, the seeded run's best held L2 and R2 up the whole time (lowest point -0.09, never near the floor). Lift only looked at a foot's highest point, so those legs earned lift without ever stepping, while the other six legs kept four feet down. How it was found: checking each foot's lowest point. Fix (a): lift only counts for a foot that touches the floor at some point.
 - Forward stopped at 0. A gait sliding the wrong way scored the same as one standing still, so the GA could not tell a slightly wrong gait from a very wrong one. This was not seen being exploited, it was a gap in the signal. Fix (b): forward can go down to -1.
 - No energy term. The brief asks for a fitness that balances speed, stability and energy efficiency, and the fitness had nothing for energy. The previous final gait also hit the 2.5 maximum by generation 32, after which the GA could not tell it apart from a better one. The energy penalty covers both: the GA now keeps improving after the walk is perfect, by finding a cheaper way to do it.
-- Lazy back legs. What the GA did: forward was averaged over all eight feet and then capped at 1, so some legs could push for others. In the 2.354 gait, L3 and R3 swept 2.8 and 3.0 times the forward target while the back legs swept only 0.02 to 0.03 of it and the front legs 0.17 to 0.19. The total still reached the cap, so the score could not see the problem. How it was found: Lauren watched the gait in `show_best.py` and saw the front and back legs barely moving. Fix (Lauren, commit 32cd99c): forward is capped for each foot before averaging. In the new final run the back legs push 0.69 of the target instead of 0.02.
+- Lazy back legs. What the GA did: forward was averaged over all eight feet and then capped at 1, so some legs could push for others. In the 2.354 gait, L3 and R3 swept 2.8 and 3.0 times the forward target while the back legs swept only 0.02 to 0.03 of it and the front legs 0.17 to 0.19. The total still reached the cap, so the score could not see the problem. How it was found: watching the gait in `show_best.py` showed the front and back legs barely moving. Fix (commit 32cd99c): forward is capped for each foot before averaging. In the new final run the back legs push 0.69 of the target instead of 0.02.
 
 ## Known limits
 
@@ -88,11 +86,3 @@ One step is 60 frames, so every 5th frame gives 12 samples per step. One call ta
 - Support cannot tell a planted foot from a foot that is only passing below the top of the band on its way up or down.
 - The back legs (L4, R4) still push less than the others: 0.69 of the forward target against 0.98 to 1.03. Per-leg scoring fixed them doing almost nothing, but not completely. They do lift properly now (0.11 above the band, like the others), where in the earlier population-40 runs they shuffled.
 - The score does not look at the body or at balance, only at the feet. A gait can score well and still look odd, so `show_best.py` is the real check.
-
-## How this was made
-
-Claude proposed the structure (support, lift and below floor) and helped in writing the code for those three terms and the hand-made gaits. Sujan ran `fitness.py` on the first version, with these results: standing 1.000, random mean 0.484, best 1.036 over 20 random chromosomes.
-
-Claude ran the loophole analysis and the seeded GA comparisons, re-scored the check table, ran the first 100-generation test and helped Sujan write `check_fitness()`. Sujan then re-ran `fitness.py` and the final energy GA on his own machine, and the numbers matched. The energy term was proposed and tested in Lauren's session with Claude; Sujan added it to `fitness.py` and re-ran the GA, which matched her test run exactly (2.354, energy 0.292). This was before the per-leg forward change; the final run (2.227) is described below.
-
-The lazy-back-legs loophole was spotted by Lauren; the per-leg forward fix was worked out and tested in her session with Claude. The numbers for the final run and the check table were re-run with Claude's help. See also the AI-use statement in `CONTRIBUTIONS.md`.

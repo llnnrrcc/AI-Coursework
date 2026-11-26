@@ -59,8 +59,6 @@ Right-side coxa: same amplitude, offset sign flipped. Femur and tibia are the sa
 - **Why fixed:** real spiders walk in these teams (Wang et al., 2011), and fixing them means half the legs are always in the stance half of their step, spread across both sides of the body. Whether those feet are actually on the floor depends on the femur and tibia timing, which the GA chooses, so the fitness rewards it (`support_reward`) rather than assuming it. The GA would otherwise have to discover this pattern by trial and error. Neighbouring legs in opposite teams do pass closest at the turnaround, where L1 and L2's feet come within 0.56 (against 1.59 if they moved in step), but their leg segments stay at least 0.49 apart, so they never cross. `fitness.py` should still penalise neighbouring feet that get too close. To stop the GA undoing the teams, each coxa's timing gene is limited to a small window around its team's timing. Femur and tibia timing stay free, so the GA can still choose when in the step each leg lifts.
 
 
-**Origin:** the wave design was proposed by Claude. The cycle and floor numbers were run in the model with Claude's help. See also the AI-use statement in `CONTRIBUTIONS.md`.
-
 ### Keeping genes inside the joint limits
 
 Each joint has three genes, each with a fixed range:

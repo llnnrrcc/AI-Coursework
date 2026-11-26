@@ -1,7 +1,5 @@
 # Neural network training (Part 2)
 
-Written by Sujan.
-
 ## What the network learns
 
 The network learns to reproduce the GA's final walking gait (`final_best_chromosome.npy`: population 80, seed 1, 100 generations, fitness 2.227 with the energy term and per-leg forward scoring). Earlier versions of this write-up used the GA's previous final gaits; all numbers below are for the current one. Given where the spider is in its step, it outputs all 24 joint angles for that moment.
@@ -50,6 +48,6 @@ Scored with the GA's fitness, the network's gait gets 2.167 against the GA's 2.2
 ## Limits
 
 - The full four-rate comparison uses one seed (0). To check 2.0 against 0.5 was not luck, both were also trained with seeds 1 and 2. 2.0 ended lower every time: 0.0000039, 0.0000037 and 0.0000023 against 0.0000083, 0.0000115 and 0.0000085 for 0.5 (seeds 0, 1 and 2).
-- The gait repeats every 60 frames, so all 300 examples are only 60 different moments. To check the network learned the movement rather than memorising those moments, Lauren's held-out test (`nn/held_out_test.py`) trains a fresh network on the even frames only and tests it on the odd frames, which it never sees (the 60-frame repeat keeps every odd frame unseen). The error on the unseen frames (0.0000055) is the same as on the training frames (0.0000055), and the worst unseen angle is 0.023 rad (1.3 degrees) off. Its full 300-frame gait scores 2.167 on the GA's fitness, the same as the network trained on every frame.
+- The gait repeats every 60 frames, so all 300 examples are only 60 different moments. To check the network learned the movement rather than memorising those moments, the held-out test (`nn/held_out_test.py`) trains a fresh network on the even frames only and tests it on the odd frames, which it never sees (the 60-frame repeat keeps every odd frame unseen). The error on the unseen frames (0.0000055) is the same as on the training frames (0.0000055), and the worst unseen angle is 0.023 rad (1.3 degrees) off. Its full 300-frame gait scores 2.167 on the GA's fitness, the same as the network trained on every frame.
 - The error was still falling slowly at epoch 2000, so more epochs would lower it a little more.
 

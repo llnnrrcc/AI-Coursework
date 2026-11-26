@@ -1,7 +1,5 @@
 # GA experiments (A2)
 
-Written by Sujan.
-
 ## What was tested
 
 One GA setting was changed at a time, with the other two kept at the defaults `ga.py` had at the time (population 40, mutation rate 0.1, tournament size 3, elitism 2, 50 generations):
@@ -78,7 +76,3 @@ Mutation rate 0.1 and tournament size 5. Population 40, or 80 if the extra time 
 - Three seeds is few. Differences smaller than about 0.2 between settings are inside the run-to-run spread.
 - Changing one setting at a time does not show how settings interact (for example a bigger population with a higher mutation rate).
 - These numbers are for this version of the fitness only. An earlier run on the fitness before the sinking fix gave different numbers (population 20 averaged 1.913 then, against 2.220 now).
-
-## How this was made
-
-`experiments.py` was written by Claude and run by Sujan. This write-up was drafted with Claude's help from `summary.csv` and `runs.jsonl`. See also the AI-use statement in `CONTRIBUTIONS.md`.

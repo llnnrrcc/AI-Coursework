@@ -46,7 +46,3 @@ We also tried two hidden layers of 16 neurons. We did not use them because it to
 - Every network was trained for 2,000 epochs. The 16, 32 and two-layer networks were still slowly improving at that point, so the comparison is at a fixed training time.
 - The size check used 3 random starts per size. More would give a firmer answer.
 - The held-out test (train on even frames, test on odd frames) shows the network fills in moments between frames correctly, but every moment is still within one repeated step.
-
-## How this was made
-
-Claude wrote `architectures.py` and `size_check.py` and helped me structure this write-up; I ran the experiments, chose the network size, and wrote the reasoning in each section.

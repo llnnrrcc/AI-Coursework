@@ -1,7 +1,6 @@
 # A2: Tibia limits
 
 Date: 19 Oct 2026
-Tester: Sujan
 Setup: L1 only, tibia changed (`angles[2]`). The first pass (main sweep and edge rows below) held the femur at -0.8. The group's agreed femur range is -0.5 to -0.2, so the later sections repeat the sweep across that range. The -0.8 rows are kept as the first-pass evidence.
 Angles are in radians (1 rad is about 57 degrees).
 
@@ -75,7 +74,6 @@ Results:
 There was no threshold in the brief, so one was defined from measurable tests run on L1 (numbers calculated from `kinematics.py`). First, reach: the foot should stay well outside its own base, so a horizontal reach of at least about 1.5 is required (the body half-width is 1.0). Second, the foot should still be getting lower as the tibia bends, because past the lowest-foot point a deeper bend only curls the leg back up toward the body. In the first pass at femur -0.8 that point was at a tibia of about -1.29, which made the limit -1.5. Across the agreed femur range (-0.5 to -0.2) the lowest-foot point moves to between -1.59 and -1.89, so that test no longer limits anything above about -1.6, and reach becomes the binding test: it stays at or above 1.5 down to about -1.83 at femur -0.5. The minimum is therefore set at -1.7, which keeps reach at 1.63 or more at every femur value and sits at about 97 degrees of flexion, within the figures reported for real spiders (about 90 degrees typical, up to about 111 degrees at the extreme). The maximum is 0.0, a straight leg, since a spider's knee does not bend backward past straight; at +0.5 the first pass showed hyperextension and almost no extra reach.
 
 Sources: Gartly, R. L. (2023), _Elucidating the Relationships Between Spider Size, Joint Stiffness, and the Mechanical Frequency Response of the Body_, MSc thesis, Western University, https://ir.lib.uwo.ca/etd/9835 (knee-like joints are held flexed at about 100 degrees interior angle when standing). Wang, Z. et al. (2011), Movement behavior of a spider on a horizontal surface, _Chinese Science Bulletin_ 56(25): 2748-2757, doi:10.1007/s11434-011-4584-y (femur-tibia angle measured between about 69 and 171 degrees, tibia-metatarsus between about 87 and 175 degrees). Both papers report interior angles, where 180 degrees is a straight leg, so flexion from straight (what `angles[2]` uses) is 180 minus the interior angle: about 80 degrees when standing (-1.4 rad) and up to about 111 degrees at the extreme (-1.94 rad). The model has three leg segments and a real leg has seven, so only the model's tibia hinge (femur to tibia) maps reasonably onto these joints.
-Note: threshold reasoning drafted with Claude's help; Sujan checked it by running his own sweep.
 
 ## Tibia limits
 

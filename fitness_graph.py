@@ -28,7 +28,7 @@ def plot_fitness_history(best_history, average_history):
 
 
 if __name__ == "__main__":
-    # Temporary test data until Lauren's GA is ready
+    # Temporary test data until the GA is ready
     best = [10, 15, 21, 24, 30]
     average = [5, 8, 13, 16, 21]
 

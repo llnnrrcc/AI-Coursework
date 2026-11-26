@@ -3,7 +3,7 @@
 
 ## Who did what
 
-| Task | Sujan | Jake | Lauren | Maria |
+| Task | up2270752 | up2274964 | up2277376 | up2305949 |
 | --- | :---: | :---: | :---: | :---: |
 | **Part 1: model and limits** | | | | |
 | Repo and environment setup, `requirements.txt` | | ✓ | ✓ | ✓ |
@@ -58,15 +58,61 @@
 
 ## Agreed split
 
-| Member | Student number | Contribution (%) |
-| --- | --- | --- |
-| Sujan | 2270752 | 25% |
-| Jake | 2274964 | 25% |
-| Lauren | 2277376 | 25% |
-| Maria | 2305949 | 25% |
+| Student number | Contribution (%) |
+| --- | --- |
+| up2270752 | 25% |
+| up2274964 | 25% |
+| up2277376 | 25% |
+| up2305949 | 25% |
 
-Agreed by: Sujan [ ✓ ], Jake [ ✓ ], Lauren [ ✓ ], Maria [ ✓ ]
+Agreed by: up2270752 [ ✓ ], up2274964 [ ✓ ], up2277376 [ ✓ ], up2305949 [ ✓ ]
 
 ## Use of AI
 
-[To be added once the group agrees the AI-use statement.]
+We used Claude (Anthropic's AI assistant) throughout this coursework. We used it to explain concepts, propose design options, write or draft code, draft write-ups and plan the group's work. Every script in this repo was run by a group member, we checked the results against the numbers we expected, and the final decisions were made by the group. Some of the most important findings came from us watching the results rather than from the AI, and the tables below say which.
+
+### File by file
+
+| File | Who | What Claude did | What we did |
+| --- | --- | --- | --- |
+| `kinematics.py` | up2274964 | [up2274964 to confirm] | Ported the MATLAB leg kinematics to Python |
+| `spider_model.py` | up2277376, up2305949 | Step-by-step guidance on the structure | Wrote and tested the model and the 3D plot |
+| `joint_limits/coxa_limits.md` | up2277376 | Drafted the angle conversions and the wording of the results | up2277376 ran and checked every pose in the model |
+| `joint_limits/femur_limits.md` | up2274964 | [up2274964 to confirm] | Ran the femur tests |
+| `joint_limits/tibia_limits.md` | up2270752 | Drafted the reasoning behind the threshold | up2270752 checked it by running their own sweep |
+| `joint_limits/coxa_symmetry.md` | up2305949 | [up2305949 to confirm] | Ran the symmetry tests |
+| `joint_limits/README.md` | up2277376 | Combined the four results files | up2277376 checked the standing pose and the gaps between neighbouring feet by running the model |
+| `DECISIONS.md` | Group | Proposed the wave-based chromosome; ran the cycle and floor numbers in the model; drafted section text | The group agreed and signed off the design and edited the text |
+| `chromosome.py`, `gait.py` | up2274964 | [up2274964 to confirm] | Wrote the decoding and ran the decode checks |
+| `fitness.py`, `fitness_design.md` | up2270752 | Proposed the first structure (support, lift, below floor) and helped write those terms and the hand-made test gaits; ran the loophole analysis and the seeded GA comparisons; re-scored the check table; helped write `check_fitness()`; proposed and tested the energy term and the per-leg forward fix | up2270752 wrote and ran the fitness function, added the later terms and re-ran every check on their own machine, and the numbers matched (2.354 for the energy run, 2.227 for the final run) |
+| `operators.py`, `test_operators.py`, `fitness_graph.py` | up2305949 | [up2305949 to confirm] | Wrote and tested the operators, including the configurable mutation step size |
+| `ga.py`, `show_best.py` | up2277376 | Step-by-step code and explanations | up2277376 built and ran the GA, chose the final settings and did the final runs |
+| `experiments.py`, `experiments.md` | up2270752 | Wrote `experiments.py`, including the crossover comparison; helped draft the write-up from the results files | up2270752 ran every experiment and wrote up the findings |
+| `save_results.py`, `foot_heights.py`, `visualisation.md` | up2274964 | Wrote both scripts, re-ran the two earlier faulty runs and drafted the write-up | up2274964 ran the scripts and checked the write-up |
+| `README.md`, `requirements.txt` | up2274964, up2270752 | [up2274964 and up2270752 to confirm] | Wrote the setup and run instructions |
+| `nn/network.py`, `nn/network_explained.md` | up2277376 | Provided the code one part at a time (layers, forward pass, backpropagation, gradient check, saving and loading) and explained each part; drafted the explanation | up2277376 built it in stages, ran every test including the gradient check, and checked and edited the explanation |
+| `nn/data.py` | up2305949 | Step-by-step instructions, no code | up2305949 wrote and tested the data preparation |
+| `nn/train.py`, `nn/learning_rates.py`, `nn/training.md` | up2270752 | [up2270752 to confirm] | up2270752 trained the network and ran the learning rate comparison on three seeds |
+| `nn/architectures.py`, `nn/size_check.py`, `nn/held_out_test.py`, `nn/show_nn_gait.py`, `nn/architectures.md` | up2277376 | Wrote the scripts and helped structure the write-up | up2277376 ran the experiments, chose the network size and wrote the reasoning |
+| `nn/reflection.md` | up2270752 | Drafted it from the group's results; measured the joint-limit errors and the forward gap on the trained network | up2270752 rewrote it |
+| `nn/pytorch_compare.py`, `nn/pytorch_comparison.md` | up2305949 | [up2305949 to confirm] | up2305949 ran the comparison and wrote it up |
+| `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Corrected the knee directions in the controller and ran the Webots tests on up2270752's machine | up2277376 wrote the controller [up2277376 and up2270752 to confirm] |
+
+### Ideas that came from Claude, and how we checked them
+
+| Idea or finding | Where it came from | How we checked it |
+| --- | --- | --- |
+| Joint limits per leg from Wang et al. (2011) | Our own research; Claude helped us read the paper | up2277376 tested every coxa limit in the model |
+| Wave-based chromosome (centre, size and timing for each joint) | Proposed by Claude | The group agreed it, and up2274964 ran the decode checks |
+| Fixed leg teams, with the right legs copying the left | Proposed by Claude, based on Wang et al. | The group signed it off. Claude made one mistake about the distance between neighbouring legs, which we found and corrected on 11 November |
+| Tournament selection and elitism | up2277376 chose them after Claude explained the options | up2277376's GA runs |
+| Sinking loophole (feet sank under the floor instead of lifting) | Found in Claude's foot-by-foot breakdown of up2277376's run | up2277376 applied the fix and re-ran the GA |
+| Hovering legs, and the forward score stopping at 0 | Found in Claude's breakdown; Claude proposed and tested the fixes | up2270752 applied them, and up2277376 confirmed the numbers matched |
+| Energy term | up2277376 questioned leaving it out; Claude proposed and tested it | The group agreed, and up2270752's run matched the test exactly |
+| Lazy back legs (some legs pushing for the others) | up2277376, by watching the animation | Claude measured each leg and tested the per-leg fix; up2277376 applied it |
+| Held-out test (train on even frames, test on odd frames) | Proposed by Claude | up2277376 ran it |
+| Final network size [2, 16, 24] | Claude reviewed 16 against 32 hidden neurons | up2277376's size check over three seeds decided it |
+
+### Planning
+
+Claude also helped up2277376 organise the group's work. It explained the brief and the marking scheme, wrote task lists for each of us, reviewed each push to GitHub, kept a log of our decisions, and explained Git and the Python setup. None of this is in the submitted code, but it shaped how we split the work.
