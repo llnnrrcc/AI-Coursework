@@ -69,7 +69,13 @@ Agreed by: up2270752 [ ✓ ], up2274964 [ ✓ ], up2277376 [ ✓ ], up2305949 [ 
 
 ## Use of AI
 
-We used Claude (Anthropic's AI assistant) throughout this coursework. We used it to explain concepts, propose design options, write or draft code, draft write-ups and plan the group's work. Every script in this repo was run by a group member, we checked the results against the numbers we expected, and the final decisions were made by the group. Some of the most important findings came from us watching the results rather than from the AI, and the tables below say which.
+We used Claude (Anthropic's AI assistant) throughout. It explained concepts, suggested design options, wrote much of the code from our designs, ran some of the analyses, and drafted most of the write-ups, which we then checked and edited. It also helped plan the group's work.
+
+We checked the work in three main ways. The backpropagation passes a gradient check (about 1e-11) and matches a PyTorch version of the same network (weights within 1.95e-13). The final GA run was re-run on a group member's own machine and gave the same numbers. Most other results were re-run by a group member; where Claude ran something that wasn't re-run, the table below says so.
+
+The group made the final decisions: the fitness terms, the GA settings, the network design and what went in each write-up. Several of the key findings came from us watching the gaits rather than from the AI. One example is up2277376 spotting the lazy back legs, which led to the per-leg forward fix. The tables below show, file by file, what Claude did and what we did.
+
+Each of us can explain the parts we worked on, as listed in the table above.
 
 ### File by file
 
@@ -96,7 +102,7 @@ We used Claude (Anthropic's AI assistant) throughout this coursework. We used it
 | `nn/architectures.py`, `nn/size_check.py`, `nn/held_out_test.py`, `nn/show_nn_gait.py`, `nn/architectures.md` | up2277376 | Wrote the scripts and helped structure the write-up | up2277376 ran the experiments, chose the network size and wrote the reasoning |
 | `nn/reflection.md` | up2270752 | Drafted it from the group's results; measured the joint-limit errors and the forward gap on the trained network | up2270752 rewrote it |
 | `nn/pytorch_compare.py`, `nn/pytorch_comparison.md` | up2305949 | [up2305949 to confirm] | up2305949 ran the comparison and wrote it up |
-| `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Corrected the knee directions in the controller and ran the Webots tests on up2270752's machine | up2277376 wrote the controller [up2277376 and up2270752 to confirm] |
+| `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Corrected the knee directions in the controller, found that the hip motors were too weak, added the hip fan, the foot levelling and the swing lift test, ran the Webots tests on up2270752's machine and drafted the results | up2277376 wrote the controller; up2270752 spotted the legs passing through each other, the back legs tangling, the hovering third pair and the dragging front foot [up2277376 and up2270752 to confirm] |
 
 ### Ideas that came from Claude, and how we checked them
 

@@ -67,6 +67,43 @@ SIGN = {
     "R": {"hip": 1.0, "thigh": -1.0, "knee": -1.0},   # knee flipped after test: 1.0 stalled and lifted the body
 }
 
+# Our model's legs fan out round the body (BASE_ANGLES in spider_model.py), but the Webots
+# legs all stand straight out sideways in two rows, so neighbouring legs can tangle. With
+# HIP_FAN = True, each Webots hip stands at its leg's angle in our model instead of 0:
+# front legs angled forwards, back legs backwards. The tilted Webots hip axis makes the
+# fan narrower than ours, but it roughly doubles the gap between neighbouring feet.
+HIP_FAN = True
+BASE_ANGLES = {"L1": 45, "L2": 75, "L3": 105, "L4": 135,
+               "R1": -45, "R2": -75, "R3": -105, "R4": -135}   # degrees, from spider_model.py
+
+# Turning a hip about the tilted Webots axis also lowers the foot, so the fan alone leaves
+# the front and back feet 0.175 m below the third pair, which then hover. These thigh lifts
+# (our + = up, in rad) put every foot back at the height it has with the hips at 0. Found by
+# forward kinematics of the legs in SpiderOctopod.proto; the left and right sides mirror.
+FAN_THIGH_LIFT = {"1": 0.365, "2": 0.079, "3": 0.007, "4": 0.365}
+
+
+def stand_angle(leg, joint):
+    """The Webots angle this joint holds when our model is in its standing pose."""
+    side = leg[0]
+    if joint == "hip" and HIP_FAN:
+        sideways = 90 if side == "L" else -90   # a leg pointing straight out
+        fan = math.radians(BASE_ANGLES[leg] - sideways) + OUR_STAND[leg]["hip"]
+        return SIGN[side]["hip"] * fan
+    if joint == "thigh" and HIP_FAN:
+        return WEBOTS_STAND[side]["thigh"] + SIGN[side]["thigh"] * FAN_THIGH_LIFT[leg[1]]
+    return WEBOTS_STAND[side][joint]
+
+
+# Our feet only rise about 0.2 above the contact line, and the shorter Webots legs turn the
+# same knee movement into an even smaller lift, so the front feet drag. While a foot is in
+# the air in our model (above BAND_HIGH), its Webots thigh is lifted by SWING_LIFT rad per
+# metre of our foot's height above the line. 0 turns this off.
+BAND_HIGH = -0.25        # our contact line (fitness.py)
+SWING_LIFT = {"1": 0.0, "2": 0.0, "3": 0.0, "4": 0.0}   # per leg pair. Lifting feet clear walks less far:
+# 1.5 on every pair walked 6.69 m and 1.5 on the front pair only 4.04 m, against 8.72 m with none.
+
+
 # Our leg segments (1.2, 0.7, 1.0) are longer than the robot's (0.5, 0.6, 0.7). 1.0 copies
 # our angles exactly; lower values make smaller movements if the robot tips over.
 SCALE = {"hip": 1.0, "thigh": 1.0, "knee": 1.0}
@@ -106,7 +143,7 @@ def to_webots(leg, joint, our_angle):
     """Convert one of our angles to the Webots robot's convention."""
     side = leg[0]
     change = our_angle - OUR_STAND[leg][joint]
-    return WEBOTS_STAND[side][joint] + SIGN[side][joint] * SCALE[joint] * change
+    return stand_angle(leg, joint) + SIGN[side][joint] * SCALE[joint] * change
 
 
 def wait(seconds):
@@ -119,7 +156,7 @@ def wait(seconds):
 def stand():
     for leg in LEGS:
         for joint in JOINTS:
-            set_joint(leg, joint, WEBOTS_STAND[leg[0]][joint])
+            set_joint(leg, joint, stand_angle(leg, joint))
     wait(3.0)
 
 
@@ -133,7 +170,7 @@ def load_gait():
             frame = {}
             for column, value in row.items():
                 leg, suffix = column.split("_", 1)
-                frame[(leg, names[suffix])] = float(value)
+                frame[(leg, names.get(suffix, suffix))] = float(value)   # foot_z kept as is
             frames.append(frame)
     return frames
 
@@ -205,7 +242,13 @@ def play():
         while t < PLAY_SECONDS:
             frame = frames[int(t / frame_seconds) % len(frames)]
             for (leg, joint), angle in frame.items():
-                set_joint(leg, joint, to_webots(leg, joint, angle))
+                if joint == "foot_z":
+                    continue
+                target = to_webots(leg, joint, angle)
+                if joint == "thigh":
+                    air = max(0.0, frame.get((leg, "foot_z"), BAND_HIGH) - BAND_HIGH)
+                    target += SIGN[leg[0]]["thigh"] * SWING_LIFT[leg[1]] * air
+                set_joint(leg, joint, target)
             if robot.step(timestep) == -1:
                 return
             t += timestep / 1000
