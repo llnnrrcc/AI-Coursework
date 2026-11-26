@@ -42,11 +42,11 @@ The GA has no reason to push past the forward target, so it doesn't. In the fina
 
 A speed reward that keeps rising instead of a capped forward term, or caps based on real spider data, would let the walk be decided by something more meaningful.
 
-### One seed for most comparisons
+### Only three seeds for the comparisons
 
-The architecture comparison and the full four-rate learning-rate comparison each used one seed, so one unlucky start could change a close result. The one comparison I did check on more seeds held up: learning rate 2.0 beat 0.5 on seeds 0, 1 and 2 (0.0000039, 0.0000037 and 0.0000023 against 0.0000083, 0.0000115 and 0.0000085). The architecture results haven't been checked like that. On the current gait [2, 32, 24] and [2, 16, 16, 24] end 1.5 to 1.8 times lower than [2, 16, 24] (0.0000026 and 0.0000022 against 0.0000039), which is a small enough gap that another seed could change it.
+Most of our comparisons now use three random starts, but three is still few. The full four-rate learning-rate comparison used one seed, and only 2.0 against 0.5 was repeated: 2.0 won on seeds 0, 1 and 2 (0.0000039, 0.0000037 and 0.0000023 against 0.0000083, 0.0000115 and 0.0000085). The network size was checked over three random starts in `nn/architectures.md`, and the gaps there are small. The worst foot error was 0.0062 for 8 hidden neurons, 0.0047 for 16 and 0.0043 for 32, and the average gait scores sat within 0.014 of each other. With only three runs each, gaps that small could shift with more seeds.
 
-The fix is to repeat the architecture comparison with three seeds and report the average and spread, the same way I did for the GA settings in `experiments.md`.
+More seeds would firm these up, for example ten per setting with the average and spread reported, the same way the GA settings are reported in `experiments.md`.
 
 ### No physics or inverse kinematics
 
