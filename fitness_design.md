@@ -91,8 +91,8 @@ One step is 60 frames, so every 5th frame gives 12 samples per step. One call ta
 
 ## How this was made
 
-Claude proposed the structure (support, lift and below floor) and wrote the code for those three terms and the hand-made gaits. Sujan ran `fitness.py` on the first version, with these results: standing 1.000, random mean 0.484, best 1.036 over 20 random chromosomes.
+Claude proposed the structure (support, lift and below floor) and helped in writing the code for those three terms and the hand-made gaits. Sujan ran `fitness.py` on the first version, with these results: standing 1.000, random mean 0.484, best 1.036 over 20 random chromosomes.
 
-The loophole analysis, the re-scored check table, the seeded GA results, the 100-generation run and `check_fitness()` were done with Claude's help. The energy term was proposed and tested in Lauren's session with Claude; Sujan added it to `fitness.py` and re-ran the GA, which matched her test run exactly (2.354, energy 0.292). This was before the per-leg forward change; the final run (2.227) is described below.
+Claude ran the loophole analysis and the seeded GA comparisons, re-scored the check table, ran the first 100-generation test and helped Sujan write `check_fitness()`. Sujan then re-ran `fitness.py` and the final energy GA on his own machine, and the numbers matched. The energy term was proposed and tested in Lauren's session with Claude; Sujan added it to `fitness.py` and re-ran the GA, which matched her test run exactly (2.354, energy 0.292). This was before the per-leg forward change; the final run (2.227) is described below.
 
 The lazy-back-legs loophole was spotted by Lauren; the per-leg forward fix was worked out and tested in her session with Claude. The numbers for the final run and the check table were re-run with Claude's help. See also the AI-use statement in `CONTRIBUTIONS.md`.
