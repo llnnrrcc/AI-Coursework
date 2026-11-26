@@ -227,3 +227,7 @@ explore.py
 experiment_results*/
 test_run/
 best_chromosome.npy
+best_chromosome_old.npy
+
+# The module's Webots world (not ours); our controller and results live in webots/
+Spider_world_demo/
