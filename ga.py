@@ -1,5 +1,5 @@
 """
-ga.py - the genetic algorithm that evolves the spiders gait
+ga.py - the genetic algorithm that evolves the spider's gait
 
 Using a set of randomly generated chromosomes, scored against the fitness function, keeping the best unchanged (elitism) and selecting the rest by tournament selection, crossover and mutation.
 
