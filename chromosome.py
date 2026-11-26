@@ -35,7 +35,7 @@ JOINT_NAMES = ["coxa", "femur", "tibia"]
 # Position of each gene inside its joint's group of three
 CENTRE, SIZE, TIMING = 0, 1, 2
 
-# --- Joint limits in radians (joint_limits/joint_limits_summary.md) ---
+# --- Joint limits in radians (joint_limits/README.md) ---
 # The coxa limits differ per leg because each leg joins the body at a different
 # angle. The right legs use the same limits with the sign flipped.
 COXA_LIMITS = {

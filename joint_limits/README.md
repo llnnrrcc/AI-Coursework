@@ -1,4 +1,4 @@
-# Joint limits: combined (Day 3)
+# Joint limits: combined 
 
 Sources: `femur_limits.md` , `tibia_limits.md` , `coxa_limits.md` , `coxa_symmetry.md`.
 All angles in radians. Slot numbers are positions in the 24-angle vector.
@@ -46,11 +46,11 @@ Femur -0.4 and tibia -1.5 on every leg (Pair A). Coxa at the middle of each leg'
 
 Checked in the model: all eight feet sit at z = -0.295, and the nearest neighbouring feet (L1 and L2) are 1.65 apart.
 
-## Open points for the group
+## How the open points were settled
 
-1. **Agree the standing pose coxa:** Pair A's files use coxa 0, B1 proposes the per-leg middles above.
-2. **Neighbouring coxa ranges overlap.** L1 reaches back to 45° and L2 reaches forward to 39°, so the two can cross. With L1 at 0 and L2 at -0.62, their feet are only 0.56 apart. Real spiders avoid this by moving neighbours out of step, so the fitness function needs a penalty for legs getting too close, or the gait needs to keep neighbours in opposite groups.
-3. **Exact limits or a margin?** The coxa limits are the real spider's measured range. We could add a small margin (0.05 to 0.1) to give the GA room.
-4. **Tidy `tibia_limits.md`:** two older lines still mention a floor of about -0.35 and the femur range as an open point, both now settled.
+1. Standing pose coxa. We used the middle of each leg's range, as in the table above, because a coxa of 0 left L1 at its backward limit and L4 just outside its range. The middle gives every leg room to swing both ways (`DECISIONS.md` section 2).
+2. Neighbouring coxa ranges overlap. L1 and L2 can reach into each other's space, so we put neighbouring legs in opposite teams, half a cycle apart. This means they never swing towards each other at the same time. Their feet still come within 0.56 of each other at the turnaround, so `fitness.py` also penalises feet that get too close (`DECISIONS.md` section 3, `fitness_design.md`).
+3. Exact limits or a margin. We kept the exact limits with no margin, because they come from the real spider's measured range. `chromosome.py` uses these values directly.
+4. Tidying `tibia_limits.md`. The floor and femur range in that file now match the agreed values (floor -0.30, femur -0.5 to -0.2).
 
-> Note: combined from the four results files with Claude's help; standing pose and neighbour gaps checked by running the model. See also the AI-use statement in `CONTRIBUTIONS.md`.
+

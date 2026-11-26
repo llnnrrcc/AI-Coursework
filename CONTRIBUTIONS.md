@@ -14,7 +14,7 @@
 | Femur limits (`femur_limits.md`) | | ✓ | | |
 | Tibia limits (`tibia_limits.md`) | ✓ | | | |
 | Floor height and standing pose | ✓ | ✓ | | |
-| Combined joint limits (`joint_limits_summary.md`) | | | ✓ | |
+| Combined joint limits (`joint_limits/README.md`) | | | ✓ | |
 | **Part 1: chromosome and GA** | | | | |
 | Chromosome design (wave encoding, `DECISIONS.md` section 3) | ✓ | ✓ | | ✓ |
 | Chromosome layout and decoding (`chromosome.py`, `gait.py`) | | ✓ | | |

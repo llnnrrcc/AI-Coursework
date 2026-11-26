@@ -8,7 +8,7 @@
 | Femur | -0.5 to -0.2 | Every leg | `joint_limits/femur_limits.md` |
 | Tibia | -1.7 to 0.0 | Every leg | `joint_limits/tibia_limits.md` |
 
-The full per-leg table with slot numbers is in `joint_limits/joint_limits_summary.md`.
+The full per-leg table with slot numbers is in `joint_limits/joint_limits/README.md`.
 
 **Why:** femur and tibia limits come from testing L1 for leg shape, reach and whether the foot can reach the ground, checked against each other because they depend on each other. Coxa limits come from testing the front and back legs against real spider measurements (Wang et al., 2011). They differ per leg because each leg is attached at a different angle around the body, so one shared range would let front legs swing into their neighbours and stop back legs reaching their working range.
 
