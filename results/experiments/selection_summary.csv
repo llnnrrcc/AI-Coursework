@@ -1,0 +1,7 @@
+setting,value,seeds,final_best_mean,final_best_std,final_average_mean,gap_mean,last_improvement_mean
+selection,tournament,5,1.941,0.124,1.806,0.135,48.8
+selection,roulette,5,1.855,0.13,1.669,0.186,49.6
+selection,rank,5,1.852,0.092,1.744,0.108,48.6
+mutation step,0.02,5,1.671,0.205,1.591,0.08,49.4
+mutation step,0.05,5,1.941,0.124,1.806,0.135,48.8
+mutation step,0.1,5,2.022,0.198,1.808,0.214,48.2

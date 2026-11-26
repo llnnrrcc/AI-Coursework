@@ -67,12 +67,43 @@ A likely reason the expected penalty did not show up: every gene keeps its own r
 
 Leg-block crossover was kept for the final run. It did no worse than the others and matches how the chromosome is organised, but the claim that it protects working steps is not backed by this result. With three seeds and 50 generations, a small advantage either way could still be hidden by the spread.
 
+## Selection and mutation step comparison
+
+Two more operator choices were tested the same way, on the current fitness, with five seeds instead of three so that closer results could be told apart.
+
+Selection methods:
+
+- Tournament (ours): pick 3 at random, the fittest wins.
+- Roulette wheel: chance proportional to fitness. Fitness can be negative here (the below-floor penalty), so scores are shifted to start at 0 first.
+- Rank: chance proportional to rank (worst 1, best 40) instead of the score itself.
+
+Mutation step sizes (the spread of each change, as a fraction of the gene's range): 0.02, 0.05 (ours) and 0.1.
+
+Everything else stayed at the experiment defaults (population 40, mutation rate 0.1, tournament size 3, leg-block crossover, 50 generations), with seeds 1 to 5. Run with `python experiments.py --only SELECTION MUTATION_STEP --seeds 5 --out experiment_results_selection`; the graphs are `results/experiments/experiment_selection.png` and `experiment_mutation_step.png`, and the table is `selection_summary.csv`. Tournament with step 0.05 is the same run in both groups, and its seeds 1 to 3 repeat the leg-block runs in the crossover comparison exactly (1.998, 1.694, 1.989).
+
+| Setting | Best at generation 10 | Best at generation 25 | Final best | Final average |
+| --- | --- | --- | --- | --- |
+| Tournament (ours) | 1.599 | 1.785 | 1.941 ± 0.124 | 1.806 |
+| Roulette wheel | 1.407 | 1.648 | 1.855 ± 0.130 | 1.669 |
+| Rank | 1.429 | 1.696 | 1.852 ± 0.092 | 1.744 |
+| Step 0.02 | 1.434 | 1.581 | 1.671 ± 0.205 | 1.591 |
+| Step 0.05 (ours) | 1.599 | 1.785 | 1.941 ± 0.124 | 1.806 |
+| Step 0.1 | 1.662 | 1.883 | 2.022 ± 0.198 | 1.808 |
+
+Mean of the five seeds. Per seed (1 to 5), the final bests were 1.998, 1.694, 1.989, 2.009 and 2.014 for tournament with step 0.05; 1.794, 1.881, 1.852, 1.674 and 2.074 for roulette; 1.808, 1.854, 1.731, 2.012 and 1.855 for rank; 1.445, 1.599, 1.936, 1.486 and 1.891 for step 0.02; and 2.045, 1.634, 2.167, 2.128 and 2.134 for step 0.1.
+
+Tournament selection is the best supported of the three. It finished highest on average (1.941, about 0.09 above the other two) and had the highest population average (1.806), and it was well ahead early on: 1.599 at generation 10 against 1.407 for roulette and 1.429 for rank. The final gap is smaller than the spread between seeds, though, and tournament beat each of the others on only three of the five seeds, so the clearest difference is speed rather than the final result. Roulette is likely held back by how close the scores are: late in a run the population average sits only about 0.1 to 0.2 below the best, so a good chromosome is barely more likely to be picked than an average one. Tournament and rank only compare scores, so they don't depend on how far apart the scores are.
+
+The mutation step size mattered more. Step 0.02 was the worst on every one of the five seeds and ended 0.27 below 0.05 on average: changes that small can't move a gait far enough in 50 generations. Step 0.1 finished 0.08 above 0.05 and won on four of the five seeds, losing only on seed 2, which was the weakest seed for every setting. Every run was still improving near generation 50, though, and bigger steps help most when there are few generations left, so 0.1 might not stay ahead over the 100 generations of the final run.
+
+The final run used tournament selection and step 0.05, and both were kept rather than re-running the final GA. Tournament is backed by this test. Step 0.1 is a reasonable change to try in a longer run, but changing it now would mean re-running the final GA and retraining the network on a new gait.
+
 ## Recommended settings
 
 Mutation rate 0.1 and tournament size 5. Population 40, or 80 if the extra time is acceptable (about twice as long per run). The gain from tournament 5 over 3 (2.480 against 2.464) is smaller than the spread between seeds, so it is a weak preference, not a clear win. Running more than 50 generations is likely to help more than any of these settings, since most runs were still improving at the end.
 
 ## Limits
 
-- Three seeds is few. Differences smaller than about 0.2 between settings are inside the run-to-run spread.
+- Three seeds is few. Differences smaller than about 0.2 between settings are inside the run-to-run spread. The selection and mutation step comparison used five seeds, which narrows this but does not remove it.
 - Changing one setting at a time does not show how settings interact (for example a bigger population with a higher mutation rate).
 - These numbers are for this version of the fitness only. An earlier run on the fitness before the sinking fix gave different numbers (population 20 averaged 1.913 then, against 2.220 now).

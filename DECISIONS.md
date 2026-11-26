@@ -91,7 +91,7 @@ Whole-leg crossover preserves coordinated leg movements, but two fixed parents c
 
 ### Selection and elitism
 
-**Tournament selection (size 3):** to choose each parent, three chromosomes are picked at random and the one with the highest fitness wins. Fitter chromosomes win more often, so they have more children, but weaker ones still win sometimes when they meet even weaker opponents, which keeps variety in the population. Tournament selection only compares scores, so it works with negative fitness values, which the below-floor penalty can produce.
+**Tournament selection (size 3):** to choose each parent, three chromosomes are picked at random and the one with the highest fitness wins. Fitter chromosomes win more often, so they have more children, but weaker ones still win sometimes when they meet even weaker opponents, which keeps variety in the population. Tournament selection only compares scores, so it works with negative fitness values, which the below-floor penalty can produce. Tested later against roulette-wheel and rank selection over five seeds (`experiments.md`): tournament finished highest on average and was clearly fastest early on (1.599 at generation 10 against about 1.42 for the others), though the final gap was inside the spread between seeds.
 
 **Elitism (2):** the two best chromosomes in each generation are copied unchanged into the next one, so the best solution found so far can never be lost to crossover or mutation. In the first test run, the best fitness never dropped from one generation to the next.
 

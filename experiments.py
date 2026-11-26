@@ -1,8 +1,9 @@
 """
 experiments.py - compare GA settings, one setting at a time.
 
-Each of population size, mutation rate and tournament size is changed on its own while
-the other two stay at their defaults in ga.py. Every setting is run with several seeds,
+Each setting (population size, mutation rate, tournament size, crossover, selection
+method and mutation step size) is changed on its own while the others stay at their
+defaults. Every setting is run with several seeds,
 so one lucky run does not decide anything.
 
 Run from inside the AI-Coursework folder:
@@ -10,6 +11,8 @@ Run from inside the AI-Coursework folder:
     python experiments.py --generations 5 --seeds 1 --out test_run      a quick test
     python experiments.py --only CROSSOVER --out experiment_results_crossover
                                                 only the crossover comparison
+    python experiments.py --only SELECTION MUTATION_STEP --seeds 5 --out experiment_results_selection
+                                                the selection and mutation step comparisons
 
 Runs are independent, so they are spread over several CPU cores at once (--workers,
 default: all cores but one). Each run is seeded on its own, so the results are the same
@@ -46,17 +49,26 @@ import operators
 DEFAULTS = {"POPULATION_SIZE": 40,
             "MUTATION_RATE": 0.1,
             "TOURNAMENT_SIZE": 3,
-            "CROSSOVER": "leg"}
+            "CROSSOVER": "leg",
+            "SELECTION": "tournament",
+            "MUTATION_STEP": 0.05}
 
 VALUES = {"POPULATION_SIZE": [20, 40, 80],
           "MUTATION_RATE": [0.05, 0.1, 0.2],
           "TOURNAMENT_SIZE": [2, 3, 5],
-          "CROSSOVER": ["leg", "one_point", "uniform"]}
+          "CROSSOVER": ["leg", "one_point", "uniform"],
+          "SELECTION": ["tournament", "roulette", "rank"],
+          "MUTATION_STEP": [0.02, 0.05, 0.1]}
 
 LABELS = {"POPULATION_SIZE": "population size",
           "MUTATION_RATE": "mutation rate",
           "TOURNAMENT_SIZE": "tournament size",
-          "CROSSOVER": "crossover"}
+          "CROSSOVER": "crossover",
+          "SELECTION": "selection",
+          "MUTATION_STEP": "mutation step"}
+
+# Settings this script handles itself; the rest are names in ga.py
+OWN_SETTINGS = ("CROSSOVER", "SELECTION", "MUTATION_STEP")
 
 
 def one_point_crossover(p1, p2, rng):
@@ -76,17 +88,39 @@ def uniform_crossover(p1, p2, rng):
 CROSSOVERS = {"leg": operators.crossover, "one_point": one_point_crossover, "uniform": uniform_crossover}
 
 
+def roulette_select(population, scores, rng):
+    """Pick one chromosome with chance proportional to its score.
+    Scores can be negative, so they are shifted to start at 0 first; equal scores pick evenly."""
+    weights = scores - scores.min()
+    if weights.sum() <= 0:
+        return population[rng.integers(len(population))]
+    return population[rng.choice(len(population), p=weights / weights.sum())]
+
+
+def rank_select(population, scores, rng):
+    """Pick one chromosome with chance proportional to its rank (worst 1, best N), not its score."""
+    ranks = np.empty(len(scores))
+    ranks[np.argsort(scores)] = np.arange(1, len(scores) + 1)
+    return population[rng.choice(len(population), p=ranks / ranks.sum())]
+
+
+# "tournament" is the GA's own selection (ga.py). The other two are only here to compare it against.
+SELECTIONS = {"tournament": ga.tournament_select, "roulette": roulette_select, "rank": rank_select}
+
+
 def run_key(settings, seed):
     return (f"{settings['POPULATION_SIZE']}|{settings['MUTATION_RATE']}|{settings['TOURNAMENT_SIZE']}|"
-            f"{settings['CROSSOVER']}|{seed}")
+            f"{settings['CROSSOVER']}|{settings['SELECTION']}|{settings['MUTATION_STEP']}|{seed}")
 
 
 def run_once(settings, seed, generations):
     """Run the GA once with these settings. Returns (best per generation, average per generation)."""
     for name, value in settings.items():
-        if name != "CROSSOVER":
+        if name not in OWN_SETTINGS:
             setattr(ga, name, value)      # ga.py reads these names each time it runs
     crossover = CROSSOVERS[settings["CROSSOVER"]]
+    select = SELECTIONS[settings["SELECTION"]]
+    step = settings["MUTATION_STEP"]
     ga.GENERATIONS = generations
     # ga.py passes its own seeded generator to crossover() and mutate(). Here they get a
     # separate generator seeded from the same seed instead, so each run still depends only
@@ -98,7 +132,8 @@ def run_once(settings, seed, generations):
     with contextlib.redirect_stdout(io.StringIO()), \
             mock.patch("ga.np.save"), \
             mock.patch.object(ga, "crossover", lambda a, b, *_: crossover(a, b, operator_rng)), \
-            mock.patch.object(ga, "mutate", lambda c, rate, *_: operators.mutate(c, rate, operator_rng)):
+            mock.patch.object(ga, "tournament_select", select), \
+            mock.patch.object(ga, "mutate", lambda c, rate, *_: operators.mutate(c, rate, operator_rng, step)):
         _, best_history, average_history = ga.run_ga(seed)
     return [float(x) for x in best_history], [float(x) for x in average_history]
 
@@ -119,6 +154,8 @@ def load_runs(path, generations):
             for line in f:
                 record = json.loads(line)
                 record["settings"].setdefault("CROSSOVER", "leg")   # runs from before the crossover option
+                record["settings"].setdefault("SELECTION", "tournament")   # and before these two
+                record["settings"].setdefault("MUTATION_STEP", 0.05)
                 if record["generations"] == generations:
                     runs[run_key(record["settings"], record["seed"])] = record
     return runs
@@ -229,7 +266,8 @@ def main():
                 f.write(json.dumps(record) + "\n")
             print(f"[{done}/{len(tasks)}] population {settings['POPULATION_SIZE']}, "
                   f"mutation {settings['MUTATION_RATE']}, tournament {settings['TOURNAMENT_SIZE']}, "
-                  f"crossover {settings['CROSSOVER']}, "
+                  f"crossover {settings['CROSSOVER']}, selection {settings['SELECTION']}, "
+                  f"step {settings['MUTATION_STEP']}, "
                   f"seed {seed}: final best {best[-1]:.3f} (elapsed {(time.time() - start) / 60:.1f} min)")
 
     summarise(runs, args.generations, args.out, args.only)
