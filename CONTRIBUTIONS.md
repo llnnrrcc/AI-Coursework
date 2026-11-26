@@ -62,7 +62,7 @@
 | --- | --- | --- |
 | Sujan | 2270752 | 25% |
 | Jake | 2274964 | 25% |
-| Lauren | | 25% |
+| Lauren | 2277376 | 25% |
 | Maria | 2305949 | 25% |
 
 Agreed by: Sujan [ ✓ ], Jake [ ✓ ], Lauren [ ✓ ], Maria [ ✓ ]

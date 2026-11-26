@@ -1,16 +1,18 @@
 # Reflection on the neural network (Part 2)
 
-Draft for the group to check. For each weakness I've said what the evidence is and what I think would improve it. None of the improvements have been tested.
+Written by Sujan.
+
+Each weakness below comes with the evidence for it and a suggested improvement. None of the improvements have been tested.
 
 ## What went well
 
 The network learned the movement rather than memorising the frames. Lauren's held-out test trains a fresh network on the even frames only and tests it on the odd frames, which it never sees. The error came out the same on both (0.0000055), and the worst unseen angle was 1.3 degrees off.
 
-It walks almost exactly like the GA. When I scored the network's 300-frame gait with the GA's fitness it got 2.167 against the GA's 2.227, and its angles are 0.0010 rad off on average. Support and lift match exactly and the penalties to within 0.003; the gap is almost all in forward, which I come back to below.
+It walks almost exactly like the GA. Scored with the GA's fitness, the network's 300-frame gait gets 2.167 against the GA's 2.227, and its angles are 0.0010 rad off on average. Support and lift match exactly and the penalties to within 0.003; the gap is almost all in forward, which is covered below.
 
 We know backpropagation is right, not just that the error goes down. The gradient check in `nn/network.py` compares it with gradients measured by nudging every weight, and they match to about 1e-11 for one and two hidden layers.
 
-The main choices come from experiments rather than guesses. I compared four learning rates and then checked 2.0 against 0.5 on three seeds, and 2.0 won every time. The architecture comparison tried six network sizes.
+The main choices come from experiments rather than guesses. Four learning rates were compared, then 2.0 was checked against 0.5 on three seeds, and 2.0 won every time. The architecture comparison tried six network sizes.
 
 We found the problems in the fitness by watching what the evolved gaits actually did, not just by reading their scores. Four loopholes came up this way: feet sinking under the floor, legs held up in the air, the forward reward stopping at 0, and lazy back legs (`fitness_design.md`).
 
@@ -34,7 +36,7 @@ Training could weight the frames where a foot is near that line more heavily, or
 
 It was trained on one gait, so that's the only gait it can produce. It can't walk faster or slower, and it can't turn. Its only inputs are the sine and cosine of the step phase, so nothing tells it how fast to go or which way, and for a given moment in the step it always gives the same answer.
 
-To fix this I'd run the GA a few times for different speeds (for example by changing the forward target), train on all of those gaits together, and add the speed as a third input.
+A fix would be to run the GA a few times for different speeds (for example by changing the forward target), train on all of those gaits together, and add the speed as a third input.
 
 ### The fitness caps decide the walk
 
@@ -56,4 +58,4 @@ The next step would be running the final gait in the provided Webots model, whic
 
 ## How this was made
 
-Drafted with Claude's help for structure legibility and flow. The figures for joints at their limits and the network's fitness breakdown were measured on the network trained on the final gait, for this reflection.
+Drafted by Claude from the group's write-ups and test results, then checked and edited by Sujan. The figures for joints at their limits and the network's fitness breakdown were measured on the network trained on the final gait, for this reflection. See also the AI-use statement in `CONTRIBUTIONS.md`.
