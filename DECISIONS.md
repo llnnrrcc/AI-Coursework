@@ -79,7 +79,7 @@ Genes are stored leg by leg (L1, L2, L3, L4; the right side mirrors them), 9 gen
 
 ### Mutation
 
-The genetic algorithm uses a mutation rate of 0.1, meaning each gene has a 10% probability of being mutated. Selected genes receive a small random adjustment from a normal distribution, with a standard deviation equal to 5% of the gene's allowed range. This allows the algorithm to introduce variation without usually making large changes to an existing movement pattern.
+The genetic algorithm uses a mutation rate of 0.1, meaning each gene has a 10% probability of being mutated. Selected genes receive a small random adjustment drawn from a normal distribution. The mutation step size is configurable, with a default standard deviation of 5% of each gene's permitted range. This allows us to adjust mutation strength without changing the genetic operators' implementation. This allows the algorithm to introduce variation without usually making large changes to an existing movement pattern.
 
 Centre and size genes are clipped to their permitted bounds after mutation. Coxa timing is also clipped to its restricted range of -0.125 to +0.125 to preserve the predefined leg teams. Femur and tibia timing use wrap-around because timing represents a repeating cycle, so a value of 1.1 becomes 0.1.
 

@@ -70,7 +70,7 @@ So feet can be planted for femur values from -0.5 to about -0.32, roughly 60% of
 | -0.4 | -1.4 | -0.271 | Tibia bent further; foot inside the contact band but above the floor |
 | -0.4 | -1.5 | -0.295 | Chosen pose: foot 0.005 from the floor |
 
-**Standing pose: coxa 0, femur -0.4, tibia -1.5 on all eight legs.** Every foot is at z = -0.295, almost exactly on the floor (the middle of the contact band), with reach 1.93 from the hip. Femur -0.4 sits in the middle of the planting range, so the GA can move the leg either way from this pose. Tibia -1.5 is about 86° of knee bend, close to the ~80° standing posture reported by Gartly (2023) and within the ~90° the sources call typical.
+**Final standing pose:** Femur -0.4 radians and tibia -1.5 radians on all eight legs, with each coxa angle set to the midpoint of its permitted range. The left-side coxa values are L1 -0.31, L2 -0.32, L3 -0.08 and L4 +0.31 radians, with the right-side values mirrored. All eight feet are at approximately z = -0.295, consistent with the agreed floor height of -0.30.
 
 Considered: femur -0.45 with tibia -1.5 (foot z -0.338, only 0.012 from the edge of the contact band) and femur -0.45 with tibia -1.3 (foot z -0.290, a gentler 74° bend; a fine alternative).
 

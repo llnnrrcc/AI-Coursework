@@ -31,7 +31,7 @@
 | **Part 1: experiments and results** | | | | |
 | GA settings experiments (`experiments.py`, `experiments.md`) | ✓ | | | |
 | Final GA run and settings | ✓ | | ✓ | |
-| Fitness graph (`fitness_graph.py`) | | | | |
+| Fitness graph (`fitness_graph.py`) | | | | ✓ |
 | Saving results and foot-height plots (`save_results.py`, `foot_heights.py`) | | ✓ | | |
 | Visualisation write-up (`visualisation.md`) | | ✓ | | |
 | Gait animation (`show_best.py`) | | | ✓ | |

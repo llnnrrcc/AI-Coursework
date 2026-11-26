@@ -46,10 +46,14 @@ Femur -0.4 and tibia -1.5 on every leg (Pair A). Coxa at the middle of each leg'
 
 Checked in the model: all eight feet sit at z = -0.295, and the nearest neighbouring feet (L1 and L2) are 1.65 apart.
 
-## Open points for the group
+## Final Decisions and Remaining Limitations
 
-1. **Agree the standing pose coxa:** Pair A's files use coxa 0, B1 proposes the per-leg middles above.
-2. **Neighbouring coxa ranges overlap.** L1 reaches back to 45° and L2 reaches forward to 39°, so the two can cross. With L1 at 0 and L2 at -0.62, their feet are only 0.56 apart. Real spiders avoid this by moving neighbours out of step, so the fitness function needs a penalty for legs getting too close, or the gait needs to keep neighbours in opposite groups.
-3. **Exact limits or a margin?** The coxa limits are the real spider's measured range. We could add a small margin (0.05 to 0.1) to give the GA room.
-4. **Tidy `tibia_limits.md`:** two older lines still mention a floor of about -0.35 and the femur range as an open point, both now settled.
+1. **Standing pose:** The group agreed to use the midpoint of each leg's permitted coxa range, with femur -0.4 and tibia -1.5 radians on all eight legs. This allows the coxa joints to swing in either direction within their limits.
 
+2. **Neighbouring leg movement:** The gait uses two alternating leg teams, with neighbouring legs moving half a step apart. However, this does not eliminate close approaches between neighbouring feet. The fitness function includes a crowding penalty to discourage excessive proximity.
+
+3. **Joint limits:** The agreed coxa, femur and tibia ranges are used in the chromosome encoding. The GA operates within these limits, rather than allowing joint angles to exceed them and clipping the resulting movement afterwards.
+
+4. **Ground height:** The final floor height is z = -0.30, with a contact band from -0.35 to -0.25. This is consistent with the final standing pose and the fitness function's ground-contact criteria.
+
+These decisions are documented in `DECISIONS.md`. The simplified kinematic model does not simulate full physical contact dynamics, so the limits and fitness measures remain modelling approximations.

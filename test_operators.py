@@ -69,5 +69,34 @@ assert np.array_equal(mutated_a, mutated_b)
 # Check that mutation did not modify the original parent
 assert np.array_equal(p1, p1_original)
 
+
+# Test configurable mutation step size
+rng = np.random.default_rng(42)
+
+result = mutate(
+    p1,
+    rate=1.0,
+    rng=rng,
+    step_size=0.10
+)
+
+assert result.shape == (N_GENES,)
+assert np.all(result >= LOW - 1e-12)
+assert np.all(result <= HIGH + 1e-12)
+
+# A zero step size should leave values unchanged
+rng = np.random.default_rng(42)
+
+unchanged = mutate(
+    p1,
+    rate=1.0,
+    rng=rng,
+    step_size=0.0
+)
+
+assert np.allclose(unchanged, p1)
+
+print("Configurable mutation step size tests passed!")
+
 print("Seeded randomness tests passed!")
 print("All operator tests passed!")
