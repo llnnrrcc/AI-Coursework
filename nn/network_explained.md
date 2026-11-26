@@ -20,9 +20,7 @@ For each layer, every neuron:
 2. adds its bias,
 3. squashes the total with the sigmoid function, which turns any number into one between 0 and 1.
 
-```latex
-a = \sigma(x W + b), \qquad \sigma(z) = \frac{1}{1 + e^{-z}}
-```
+    a = sigmoid(x × W + b),   where sigmoid(z) = 1 / (1 + e^(-z))
 
 The hidden layer's outputs become the output layer's inputs. The output layer's 24 values are the network's answer. Sigmoid suits the output because the targets are scaled to between 0 and 1, so every predicted angle is guaranteed to stay inside its joint's limits.
 
@@ -30,7 +28,11 @@ The whole layer is calculated at once with one matrix multiplication (`x @ W + b
 
 ## The error
 
-The error for one example is half the sum of the squared differences between the outputs and the targets. The half is there because it cancels when the error is differentiated, which keeps the backpropagation equations simple. The graphs report the mean squared error, which is the loss the brief suggests.
+The network predicts 24 joint angles, which are continuous numbers rather than categories, so this is a regression problem. The usual loss for regression is the mean squared error (MSE), and it suits our problem for three reasons.
+
+Squaring each difference means a big error counts for much more than a small one. This matters for a walking gait, because one angle that is badly wrong can push a foot through the floor or lift it off the ground, while lots of tiny errors make almost no difference to the walk. MSE also has a simple gradient. With the sigmoid output, the error signal for each output neuron is just (output - target) × output × (1 - output), which is the first step of backpropagation below. Finally, a loss like cross-entropy is built for predicting classes, so it does not fit targets that are angles.
+
+During training, the error for one example is half the sum of the squared differences between the outputs and the targets. The half cancels when the error is differentiated, which keeps the backpropagation equations simple. The graphs report the mean squared error instead, which is easier to compare between runs.
 
 ## Backpropagation: learning from the error
 
