@@ -17,7 +17,7 @@ Angles are in radians (1 rad is about 57 degrees).
 
 ## Narrowing the edges
 
-Extra values between -2.0 and -1.5, where the verdict flips. These three rows are calculated from `kinematics.py` and still need to be confirmed by running them in `explore.py` (each should print the z and reach shown here).
+Extra values between -2.0 and -1.5, where the verdict changes. These three rows were calculated from `kinematics.py` and confirmed by running `joint_limits/check_tibia.py`.
 
 | Tibia angle | Where does the tibia point? | Folds back onto femur? | Looks realistic? | L1 foot z |
 | --- | --- | --- | --- | --- |
@@ -27,7 +27,7 @@ Extra values between -2.0 and -1.5, where the verdict flips. These three rows ar
 
 ## Sweep across the agreed femur range (-0.5 to -0.2)
 
-Foot z and reach for L1 at the bottom, middle and top of the agreed femur range. These values are calculated from `kinematics.py` (they match an independent run of the same sweep) and still need to be confirmed by running them in `explore.py` with `angles[1]` set to -0.5, -0.35 and -0.2. Reach is measured from the leg's base on the body.
+Foot z and reach for L1 at the bottom, middle and top of the agreed femur range. These values were calculated from `kinematics.py` and confirmed by running `joint_limits/check_tibia.py` with femur angles of -0.5, -0.35 and -0.2. Reach is measured from the leg's base on the body.
 
 | Tibia | Femur -0.5: z / reach | Femur -0.35: z / reach | Femur -0.2: z / reach | Realistic? |
 | --- | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ What this shows: at every femur in the range the foot is still getting lower at 
 
 ## Final check of the tibia limits (-1.7 to 0.0) against the femur range
 
-Every combination of the final tibia range with the femur range was tested on L1 (a fine grid, not just the corners). The femur range was taken as -0.5 to -0.2 and, separately, as -0.5 to 0.0, which is what `femur_limits.md` gives as its result. Values below are foot z / reach, calculated from `kinematics.py`, and should be confirmed by running a few cells in `explore.py`.
+Every combination of the final tibia range with the femur range was tested on L1 using a fine grid, not just the corners. The femur range was taken as -0.5 to -0.2 and, separately, as -0.5 to 0.0. The foot z and reach values were calculated from `kinematics.py` and confirmed by running `joint_limits/check_tibia.py`.
 
 | Femur | Tibia -1.7 | Tibia -1.5 | Tibia -1.0 | Tibia -0.5 | Tibia 0.0 |
 | --- | --- | --- | --- | --- | --- |

@@ -18,7 +18,7 @@
 | **Part 1: chromosome and GA** | | | | |
 | Chromosome design (wave encoding, `DECISIONS.md` section 3) | ✓ | ✓ | | ✓ |
 | Chromosome layout and decoding (`chromosome.py`, `gait.py`) | | ✓ | | |
-| Genetic operators and their tests (`operators.py`, `test_operators.py`) | | | | |
+| Genetic operators and their tests (`operators.py`, `test_operators.py`) | | | | ✓ |
 | GA loop, selection and elitism (`ga.py`) | | | ✓ | |
 | Repeatable seeded runs | | | ✓ | ✓ |
 | **Part 1: fitness** | | | | |
@@ -37,7 +37,7 @@
 | Gait animation (`show_best.py`) | | | ✓ | |
 | **Part 2: neural network** | | | | |
 | Network from scratch: forward pass, backpropagation, gradient check (`nn/network.py`) | | | ✓ | |
-| Training data (`nn/data.py`) | | | | |
+| Training data (`nn/data.py`) | | | | ✓ |
 | Training script (`nn/train.py`) | ✓ | | | |
 | Learning-rate experiments (`nn/learning_rates.py`) | ✓ | | | |
 | Architecture comparison (`nn/architectures.py`) | | | ✓ | |

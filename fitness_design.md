@@ -70,6 +70,8 @@ One step is 60 frames, so every 5th frame gives 12 samples per step. One call ta
 
 ## What changed along the way
 
+
+- The first version was checked against two hand-made gaits and 20 random chromosomes: standing scored 1.000, the random chromosomes averaged 0.484 and the best scored 1.036.
 - Version 1 rewarded feet inside the contact band. Standing still scored the maximum (1.000), and the term also punished lifting a foot, because a lifted foot is out of the band. It was replaced with the support term (at least 4 feet planted), which does not mind the other four lifting.
 - The forward term was added because standing still still scored 1.00.
 - The too-high term was added because the best evolved gait held a foot at about z = 1.4 and nothing penalised it.
