@@ -12,14 +12,8 @@ vector of 24 angles in radians. Leg order is L1, L2, L3, L4, R4, R3, R2, R1.
 You need Python 3.11 or newer and Git. Check with `python --version`
 (on Windows, `py --version` also works).
 
-### 1. Clone the repo
 
-```
-git clone https://github.com/llnnrrcc/AI-Coursework.git
-cd AI-Coursework
-```
-
-### 2. Create and activate a virtual environment
+### 1. Create and activate a virtual environment
 
 Windows (PowerShell):
 
@@ -46,13 +40,13 @@ Windows, reinstall Python from python.org and tick "Add python.exe to PATH",
 then restart VS Code. Do not keep the repo inside OneDrive; syncing the `venv`
 folder causes problems.
 
-### 3. Install the dependencies
+### 2. Install the dependencies
 
 ```
 pip install -r requirements.txt
 ```
 
-### 4. Check it works
+### 3. Check it works
 
 ```
 python kinematics.py
@@ -155,9 +149,4 @@ version (`pip show <package>` gives the version). Only list packages the code
 imports directly, not everything `pip freeze` shows; pip installs the rest
 automatically.
 
-## Team
 
-| Pair | Members |
-| --- | ---|
-| A | up2270752, up2274964 |
-| B | up2277376, up2305949 |
