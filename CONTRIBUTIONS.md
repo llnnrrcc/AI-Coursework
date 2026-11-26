@@ -81,27 +81,27 @@ Each of us can explain the parts we worked on, as listed in the table above.
 
 | File | Who | What Claude did | What we did |
 | --- | --- | --- | --- |
-| `kinematics.py` | up2274964 | [up2274964 to confirm] | Ported the MATLAB leg kinematics to Python |
+| `kinematics.py` | up2274964 | Ported the MATLAB leg kinematics to Python |
 | `spider_model.py` | up2277376, up2305949 | Step-by-step guidance on the structure | Wrote and tested the model and the 3D plot |
 | `joint_limits/coxa_limits.md` | up2277376 | Drafted the angle conversions and the wording of the results | up2277376 ran and checked every pose in the model |
-| `joint_limits/femur_limits.md` | up2274964 | [up2274964 to confirm] | Ran the femur tests |
+| `joint_limits/femur_limits.md` | up2274964 | Ran the femur tests |
 | `joint_limits/tibia_limits.md` | up2270752 | Drafted the reasoning behind the threshold | up2270752 checked it by running their own sweep |
-| `joint_limits/coxa_symmetry.md` | up2305949 | [up2305949 to confirm] | Ran the symmetry tests |
+| `joint_limits/coxa_symmetry.md` | up2305949 | Ran the symmetry tests |
 | `joint_limits/README.md` | up2277376 | Combined the four results files | up2277376 checked the standing pose and the gaps between neighbouring feet by running the model |
 | `DECISIONS.md` | Group | Proposed the wave-based chromosome; ran the cycle and floor numbers in the model; drafted section text | The group agreed and signed off the design and edited the text |
-| `chromosome.py`, `gait.py` | up2274964 | [up2274964 to confirm] | Wrote the decoding and ran the decode checks |
+| `chromosome.py`, `gait.py` | up2274964 | Wrote the decoding and ran the decode checks |
 | `fitness.py`, `fitness_design.md` | up2270752 | Proposed the first structure (support, lift, below floor) and helped write those terms and the hand-made test gaits; ran the loophole analysis and the seeded GA comparisons; re-scored the check table; helped write `check_fitness()`; proposed and tested the energy term and the per-leg forward fix | up2270752 wrote and ran the fitness function, added the later terms and re-ran every check on their own machine, and the numbers matched (2.354 for the energy run, 2.227 for the final run) |
-| `operators.py`, `test_operators.py`, `fitness_graph.py` | up2305949 | [up2305949 to confirm] | Wrote and tested the operators, including the configurable mutation step size |
+| `operators.py`, `test_operators.py`, `fitness_graph.py` | up2305949 | Wrote and tested the operators, including the configurable mutation step size |
 | `ga.py`, `show_best.py` | up2277376 | Step-by-step code and explanations | up2277376 built and ran the GA, chose the final settings and did the final runs |
 | `experiments.py`, `experiments.md` | up2270752 | Wrote `experiments.py`, including the crossover, selection and mutation step comparisons; helped draft the write-up from the results files | up2270752 ran every experiment and wrote up the findings |
 | `save_results.py`, `foot_heights.py`, `visualisation.md` | up2274964 | Wrote both scripts, re-ran the two earlier faulty runs and drafted the write-up | up2274964 ran the scripts and checked the write-up |
-| `README.md`, `requirements.txt` | up2274964, up2270752 | [up2274964 and up2270752 to confirm] | Wrote the setup and run instructions |
+| `README.md`, `requirements.txt` | up2274964, up2270752 | Wrote the setup and run instructions |
 | `nn/network.py`, `nn/network_explained.md` | up2277376 | Provided the code one part at a time (layers, forward pass, backpropagation, gradient check, saving and loading) and explained each part; drafted the explanation | up2277376 built it in stages, ran every test including the gradient check, and checked and edited the explanation |
 | `nn/data.py` | up2305949 | Step-by-step instructions, no code | up2305949 wrote and tested the data preparation |
 | `nn/train.py`, `nn/learning_rates.py`, `nn/compare_training.py`, `nn/training.md` | up2270752 | Wrote `compare_training.py` and drafted its write-up [up2270752 to confirm the rest] | up2270752 trained the network, ran the activation and batch size comparisons, and ran the learning rate comparison on three seeds |
 | `nn/architectures.py`, `nn/size_check.py`, `nn/held_out_test.py`, `nn/show_nn_gait.py`, `nn/architectures.md` | up2277376 | Wrote the scripts and helped structure the write-up | up2277376 ran the experiments, chose the network size and wrote the reasoning |
 | `nn/reflection.md` | up2270752 | Drafted it from the group's results; measured the joint-limit errors and the forward gap on the trained network | up2270752 rewrote it |
-| `nn/pytorch_compare.py`, `nn/pytorch_comparison.md` | up2305949 | [up2305949 to confirm] | up2305949 ran the comparison and wrote it up |
+| `nn/pytorch_compare.py`, `nn/pytorch_comparison.md` | up2305949 | up2305949 ran the comparison and wrote it up |
 | `webots/`, Webots section of `nn/reflection.md` | up2277376, up2270752 | Wrote the controller (`gait_player.py`) and the export script for up2277376; corrected the knee directions after testing, found that the hip motors were too weak, added the hip fan, the foot levelling and the swing lift test, ran most of the Webots tests on up2270752's machine and drafted the results | up2277376 set up the files for the module's Webots world; up2270752 ran simulations, checked the results and spotted the legs passing through each other, the back legs tangling, the hovering third pair and the dragging front foot |
 
 ### Ideas that came from Claude, and how we checked them
